@@ -4,23 +4,55 @@ library(tidyverse)
 
 source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/Funcoes_de_Formatacao_Estilo.r')
 source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/graficos_AMB.r')
+source('D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Funcoes_CFEM.R')
+
 
 # Carregamento ----
 cfem_BR <- #fonte: Dados Abertos
-  read.table(file = paste(Sys.getenv("R_USER"),'/CSV_Data/cfem.csv', sep = ""),
-             header = TRUE,sep = ",",fill = TRUE,stringsAsFactors = FALSE, dec = ',',
-             colClasses = c(Processo = "character", CPF.CNPJ = "character"))
+  read.table(
+    file = paste(Sys.getenv("R_USER"), '/CSV_Data/Cfem.csv', sep = ""),
+    header = FALSE,
+    skip = 731220, # ano 2016 em diante
+    sep = ",",
+    #fill = TRUE,
+    stringsAsFactors = FALSE,
+    dec = ',',
+    quote = "\"",
+    col.names = c("periodo", "mes.de.referencia", "processo", "ano.do.Processo", "tipo.PF.PJ", "cpfcnpj", "titular", 
+                  "fase.do.Processo", "substancia.SCM", "uf", "municipio", "unidade.de.Medida", 
+                  "quantidade.Comercializada", "valor.Recolhido.CFEM"),
+    colClasses = c(processo = "character", ano.do.Processo = "character")
+    )
 
-colnames(cfem_BR) <- 
-  c("periodo", "processo", "ano.do.Processo", "cpfcnpj", "titular", 
-    "fase.do.Processo", "substancia.SCM", "uf", "municipio", "unidade.de.Medida", 
-    "quantidade.Comercializada", "valor.Recolhido.CFEM")
+# ____ impondo trimestre
+cfem_BR$trimestre <-
+  lubridate::quarter(
+    ymd(
+    paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
+  ), with_year = TRUE)
 
+
+# ____ impondo semestre
+cfem_BR$semestre <-
+  lubridate::semester(
+    ymd(
+      paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
+    ), with_year = TRUE)
+
+
+# ____ impondo mês.ANO
+cfem_BR$mes.de.referencia <-
+  paste(month(cfem_BR$mes.de.referencia, label = TRUE), cfem_BR$periodo, sep = ".")
+    
+
+
+# ____ carregando alíquotas
 aliquota <-
   read.table(
     file = paste(Sys.getenv("R_USER"), '/CSV_Data/cfem_aliquotas.csv', sep = ""),
     header = TRUE,sep = ";",stringsAsFactors = FALSE,dec = ',')
 
+# ____ matriz alíquotas
 matriz_aliquotas <- 
   read.table(
     file = paste(Sys.getenv("R_USER"), '/CSV_Data/cfem_matriz_alíquotas.csv', sep = ""),
@@ -112,24 +144,8 @@ cfem_BR$preco <-
           digits = 2)
 
 
-
-
-
-
-
-
 # ________________________________________________________----
 
-
-# SUBSTANCIA - UF - Substância - ANO ----
-
-arrange(
-  spread(
-    group_by(cfem_BR[cfem_BR$periodo %in% c(2020:2015), ], substancia.SCM, periodo) %>%
-      summarise(sum(valor.Recolhido.CFEM)),
-    key = periodo,
-    value = `sum(valor.Recolhido.CFEM)`
-  ),desc(`2020`))[,c(1,7:2)]
 
 
 # Maiores Empresas em cada Substância - ANO ----
@@ -158,8 +174,6 @@ df_1d <-
   do.call(what = "rbind", args = lista)
 
 
-# _____ acrescentando Razão Social
-
 # _____ df_wide_maiores_empresas_ano ----
 
 df_wide_maiores_empresas_ano <-
@@ -172,7 +186,6 @@ df_wide_maiores_empresas_ano <-
     key = periodo,
     value = CFEM
   ), desc(`2020`))[, c(1, 3, 2, 6:4)]
-
 
 
 
@@ -222,9 +235,6 @@ spread(
             periodo) %>% summarise("cfem" = sum(valor.Recolhido.CFEM)),
   key = periodo,
   value = cfem) %>% arrange(desc(`2019`))
-
-
-
 
 
 
@@ -278,7 +288,6 @@ write.table(
   row.names = FALSE,
   na = "-"
 )
-
 
 
 
