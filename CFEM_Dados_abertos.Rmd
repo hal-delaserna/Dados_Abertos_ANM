@@ -1,0 +1,148 @@
+# rm(list = ls())
+---
+title: "CFEM dados abertos"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(lubridate)
+library(deflateBR)
+
+source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/Funcoes_de_Formatacao_Estilo.r')
+source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/graficos_AMB.r')
+source('D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Funcoes_CFEM.R')
+
+# Carregamento ----
+cfem_BR <- #fonte: Dados Abertos
+  read.table(
+    file = paste(Sys.getenv("R_USER"), '/CSV_Data/Cfem.csv', sep = ""),
+    header = FALSE,
+    skip = 731220, # ano 2016 em diante
+    sep = ",",
+    #fill = TRUE,
+    stringsAsFactors = FALSE,
+    dec = ',',
+    quote = "\"",
+    col.names = c("periodo", "mes.de.referencia", "processo", "ano.do.Processo", "tipo.PF.PJ", "cpfcnpj", "titular", 
+                  "fase.do.Processo", "substancia.SCM", "uf", "municipio", "unidade.de.Medida", 
+                  "quantidade.Comercializada", "valor.Recolhido.CFEM"),
+    colClasses = c(processo = "character", ano.do.Processo = "character")
+    )
+
+
+# ____ impondo trimestre
+cfem_BR$trimestre <-
+  lubridate::quarter(
+    lubridate::ymd(
+    paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
+  ), with_year = TRUE)
+
+# ____ impondo semestre
+cfem_BR$semestre <-
+  lubridate::semester(
+    lubridate::ymd(
+      paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
+    ), with_year = TRUE)
+
+# _____ impondo mês.ANO
+cfem_BR$mes.de.referencia <-
+  as_date(paste(cfem_BR$periodo, month(cfem_BR$mes.de.referencia, label = TRUE),"1",   sep = "-")) 
+
+
+# _____ unindo o IGP à base CFEM
+IGP_DI <-
+  read.table(
+    file = paste(Sys.getenv("R_USER"), '/CSV_Data/IGP_DI.csv', sep = ""),
+    header = TRUE,sep = ";",stringsAsFactors = FALSE, dec = ',')
+IGP_DI$Data <- ymd(IGP_DI$Data)
+
+
+cfem_BR <-
+  left_join(cfem_BR, IGP_DI, by = c('mes.de.referencia' = "Data"))
+
+# Formatação e ajustes ----
+cfem_BR$municipio <- 
+  cfem_BR$municipio %>% str_squish() %>% FUNA_removeAcentos() %>% FUNA_minusculas()
+
+cfem_BR$uf <- 
+  str_squish(cfem_BR$uf)
+
+cfem_BR$unidade.de.Medida <- 
+  str_squish(cfem_BR$unidade.de.Medida)
+
+cfem_BR$substancia.SCM <- 
+  cfem_BR$substancia.SCM %>% str_squish() %>% FUNA_removeAcentos() %>% gsub(pattern = ";", replacement = "") %>% FUNA_minusculas()
+
+# vetor de valores reais (DEZ2020)---- 
+
+cfem_BR$valor.Real <- NA
+for (i in 1:nrow(cfem_BR)) {
+  cfem_BR$valor.Real[i] <-
+    cfem_BR$valor.Recolhido.CFEM[i] * (IGP_DI[IGP_DI$Data == "2020-12-01", "IGP_DI"] /
+                                         cfem_BR$IGP_DI[i])
+}
+
+
+```
+
+### 01SEM2019
+```{r cfem echo=FALSE, message=FALSE, warning=FALSE}
+summary(cfem_BR[cfem_BR$semestre == '2019.1',]$valor.Recolhido.CFEM)
+```
+### 02SEM2019
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+summary(cfem_BR[cfem_BR$semestre == '2019.2',]$valor.Recolhido.CFEM)
+```
+### 01SEM2020
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+summary(cfem_BR[cfem_BR$semestre == '2020.1',]$valor.Recolhido.CFEM)
+```
+### 02SEM2020
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+summary(cfem_BR[cfem_BR$semestre == '2020.2',]$valor.Recolhido.CFEM)
+```
+
+## ANOS
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+FUNA_CFEM_GroupBY_Ano(anos = '2016|2017|2018|2019|2020') %>% FUNA_BARPLOT()
+```
+
+## semestre
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+FUNA_CFEM_GroupBY_Semestre(anos = '2016|2017|2018|2019|2020') %>% FUNA_BARPLOT()
+```
+
+
+## 2018 meses
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+FUNA_CFEM_GroupBY_Mes(anos = '2018') %>% FUNA_BARPLOT()
+```
+
+
+## 2019 meses
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+FUNA_CFEM_GroupBY_Mes(anos = '2019') %>% FUNA_BARPLOT()
+```
+
+
+## 2020 meses
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+FUNA_CFEM_GroupBY_Mes(anos = '2020') %>% FUNA_BARPLOT()
+```
+
+
+## 2020 meses em valores REAIS
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+FUNA_CFEM_GroupBY_Mes(anos = '2020', nominal = FALSE) %>% FUNA_BARPLOT()
+
+```
+
+
+
+
+
+
