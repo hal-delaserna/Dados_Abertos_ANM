@@ -33,26 +33,26 @@ cfem_BR <- #fonte: Dados Abertos
     )
 
 
-# ____ impondo trimestre
+# _____impondo trimestre
 cfem_BR$trimestre <-
   lubridate::quarter(
     lubridate::ymd(
     paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
   ), with_year = TRUE)
 
-# ____ impondo semestre
+# _____impondo semestre
 cfem_BR$semestre <-
   lubridate::semester(
     lubridate::ymd(
       paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
     ), with_year = TRUE)
 
-# _____ impondo mês.ANO
+# _____impondo mês.ANO
 cfem_BR$mes.de.referencia <-
   as_date(paste(cfem_BR$periodo, month(cfem_BR$mes.de.referencia, label = TRUE),"1",   sep = "-")) 
 
 
-# _____ unindo o IGP à base CFEM
+# _____unindo o IGP à base CFEM
 IGP_DI <-
   read.table(
     file = paste(Sys.getenv("R_USER"), '/CSV_Data/IGP_DI.csv', sep = ""),
@@ -62,6 +62,15 @@ IGP_DI$Data <- ymd(IGP_DI$Data)
 
 cfem_BR <-
   left_join(cfem_BR, IGP_DI, by = c('mes.de.referencia' = "Data"))
+
+# vetor de valores reais (DEZ2020)---- 
+
+cfem_BR$valor.Real <- NA
+for (i in 1:nrow(cfem_BR)) {
+  cfem_BR$valor.Real[i] <-
+    cfem_BR$valor.Recolhido.CFEM[i] * (IGP_DI[IGP_DI$Data == "2020-12-01", "IGP_DI"] /
+                                         cfem_BR$IGP_DI[i])
+}
 
 # Formatação e ajustes ----
 cfem_BR$municipio <- 
@@ -75,16 +84,6 @@ cfem_BR$unidade.de.Medida <-
 
 cfem_BR$substancia.SCM <- 
   cfem_BR$substancia.SCM %>% str_squish() %>% FUNA_removeAcentos() %>% gsub(pattern = ";", replacement = "") %>% FUNA_minusculas()
-
-# vetor de valores reais (DEZ2020)---- 
-
-cfem_BR$valor.Real <- NA
-for (i in 1:nrow(cfem_BR)) {
-  cfem_BR$valor.Real[i] <-
-    cfem_BR$valor.Recolhido.CFEM[i] * (IGP_DI[IGP_DI$Data == "2020-12-01", "IGP_DI"] /
-                                         cfem_BR$IGP_DI[i])
-}
-
 
 ```
 
@@ -110,10 +109,16 @@ summary(cfem_BR[cfem_BR$semestre == '2020.2',]$valor.Recolhido.CFEM)
 FUNA_CFEM_GroupBY_Ano(anos = '2016|2017|2018|2019|2020') %>% FUNA_BARPLOT()
 ```
 
-## semestre
+## semestres
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 FUNA_CFEM_GroupBY_Semestre(anos = '2016|2017|2018|2019|2020') %>% FUNA_BARPLOT()
 ```
+
+## Meses nominais
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+FUNA_CFEM_GroupBY_Mes(anos = '2016|2017|2018|2019|2020') %>% FUNA_BARPLOT()
+```
+
 
 
 ## 2018 meses
@@ -123,7 +128,7 @@ FUNA_CFEM_GroupBY_Mes(anos = '2018') %>% FUNA_BARPLOT()
 
 
 ## 2019 meses
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 FUNA_CFEM_GroupBY_Mes(anos = '2019') %>% FUNA_BARPLOT()
 ```
 
@@ -135,14 +140,17 @@ FUNA_CFEM_GroupBY_Mes(anos = '2020') %>% FUNA_BARPLOT()
 
 
 ## 2020 meses em valores REAIS
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r Meses em valores reais, echo=FALSE, message=FALSE, warning=FALSE}
 
-FUNA_CFEM_GroupBY_Mes(anos = '2020', nominal = FALSE) %>% FUNA_BARPLOT()
+FUNA_CFEM_GroupBY_Mes(anos = '2016|2017|2018|2019|2020', nominal = FALSE) %>% FUNA_BARPLOT()
 
 ```
 
 
 
+```{r}
+cfem_BR 
+```
 
 
 

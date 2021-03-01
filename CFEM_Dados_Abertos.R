@@ -1,6 +1,7 @@
 #       rm(list = ls())
 # options(editor = 'notepad')
 library(tidyverse)
+library(lubridate)
 
 source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/Funcoes_de_Formatacao_Estilo.r')
 source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/graficos_AMB.r')
@@ -27,7 +28,7 @@ cfem_BR <- #fonte: Dados Abertos
 # ____ impondo trimestre
 cfem_BR$trimestre <-
   lubridate::quarter(
-    ymd(
+    lubridate::ymd(
     paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
   ), with_year = TRUE)
 
@@ -35,22 +36,29 @@ cfem_BR$trimestre <-
 # ____ impondo semestre
 cfem_BR$semestre <-
   lubridate::semester(
-    ymd(
+    lubridate::ymd(
       paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
     ), with_year = TRUE)
 
 
 # ____ impondo mês.ANO
 cfem_BR$mes.de.referencia <-
-  paste(month(cfem_BR$mes.de.referencia, label = TRUE), cfem_BR$periodo, sep = ".")
+  as_date(paste(cfem_BR$periodo, month(cfem_BR$mes.de.referencia, label = TRUE),"1",   sep = "-")) 
     
-
 
 # ____ carregando alíquotas
 aliquota <-
   read.table(
     file = paste(Sys.getenv("R_USER"), '/CSV_Data/cfem_aliquotas.csv', sep = ""),
     header = TRUE,sep = ";",stringsAsFactors = FALSE,dec = ',')
+
+# ____ carregando IGP-DI
+IGP_DI <-
+  read.table(
+    file = paste(Sys.getenv("R_USER"), '/CSV_Data/IGP_DI.csv', sep = ""),
+    header = TRUE,sep = ";",stringsAsFactors = FALSE, dec = ',')
+
+
 
 # ____ matriz alíquotas
 matriz_aliquotas <- 
@@ -288,6 +296,7 @@ write.table(
   row.names = FALSE,
   na = "-"
 )
+
 
 
 
