@@ -1,4 +1,3 @@
-# rm(list = ls())
 ---
 title: "CFEM dados abertos"
 output: html_document
@@ -10,6 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(lubridate)
 library(deflateBR)
+library(knitr)
 
 source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/Funcoes_de_Formatacao_Estilo.r')
 source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/graficos_AMB.r')
@@ -52,6 +52,25 @@ cfem_BR$mes.de.referencia <-
   as_date(paste(cfem_BR$periodo, month(cfem_BR$mes.de.referencia, label = TRUE),"1",   sep = "-")) 
 
 
+# Formatação e ajustes ----
+cfem_BR$municipio <- 
+  cfem_BR$municipio %>% str_squish() %>% FUNA_removeAcentos() %>% FUNA_minusculas()
+
+cfem_BR$uf <- 
+  str_squish(cfem_BR$uf)
+
+cfem_BR$unidade.de.Medida <- 
+  str_squish(cfem_BR$unidade.de.Medida)
+
+cfem_BR$substancia.SCM <- 
+  cfem_BR$substancia.SCM %>% str_squish() %>% FUNA_removeAcentos() %>% gsub(pattern = ";", replacement = "") %>% FUNA_minusculas()
+
+
+# id Municipio_UF ----
+cfem_BR$municipio_UF <- 
+  paste(cfem_BR$municipio, cfem_BR$uf, sep = "_")
+
+
 # _____unindo o IGP à base CFEM
 IGP_DI <-
   read.table(
@@ -72,23 +91,11 @@ for (i in 1:nrow(cfem_BR)) {
                                          cfem_BR$IGP_DI[i])
 }
 
-# Formatação e ajustes ----
-cfem_BR$municipio <- 
-  cfem_BR$municipio %>% str_squish() %>% FUNA_removeAcentos() %>% FUNA_minusculas()
-
-cfem_BR$uf <- 
-  str_squish(cfem_BR$uf)
-
-cfem_BR$unidade.de.Medida <- 
-  str_squish(cfem_BR$unidade.de.Medida)
-
-cfem_BR$substancia.SCM <- 
-  cfem_BR$substancia.SCM %>% str_squish() %>% FUNA_removeAcentos() %>% gsub(pattern = ";", replacement = "") %>% FUNA_minusculas()
 
 ```
 
 ### 01SEM2019
-```{r cfem echo=FALSE, message=FALSE, warning=FALSE}
+```{r cfem, echo=FALSE, message=FALSE, warning=FALSE}
 summary(cfem_BR[cfem_BR$semestre == '2019.1',]$valor.Recolhido.CFEM)
 ```
 ### 02SEM2019
@@ -147,10 +154,58 @@ FUNA_CFEM_GroupBY_Mes(anos = '2016|2017|2018|2019|2020', nominal = FALSE) %>% FU
 ```
 
 
+## Maiores Empresas em cada Substância - ANO 
+```{r Maiores Empresas em cada Substância - ANO, echo=FALSE}
 
-```{r}
-cfem_BR 
+
+df <-
+  group_by(cfem_BR[cfem_BR$periodo %in% c(2018, 2019, 2020),],
+           cpfcnpj, substancia.SCM, periodo) %>% summarise(
+             "Q_Comercializada" = sum(quantidade.Comercializada),
+             "CFEM" = sum(valor.Recolhido.CFEM))
+
 ```
 
+
+## Extração do top 6 em cada substância 
+```{r  Extração do top 6 em cada substância , echo=FALSE}
+
+lista <- list()
+i <- 1
+for (ano in 2018:2020) {
+  for (substancia in sort(unique(cfem_BR$substancia.SCM))) {
+    lista[[i]] <-
+      head(arrange(df[df$periodo == ano &
+                           df$substancia.SCM == substancia,], desc(CFEM)))
+    i <- i + 1
+  }
+}
+
+df_1d <- 
+  do.call(what = "rbind", args = lista)
+
+kable(df_1d)
+
+```
+
+
+
+# _____ df_wide_maiores_empresas_ano ----
+```{r maiores_empresas_ano_wide, echo=FALSE}
+
+df_wide_maiores_empresas_ano <-
+  arrange(spread(
+    left_join(
+      df_1d[, -4], # -Q_Comercializada
+      #cpfcnpj,
+      unique(cfem_BR[, c("cpfcnpj", "titular")]), 
+      by = "cpfcnpj"),  
+    key = periodo,
+    value = CFEM
+  ), desc(`2020`))[, c(1, 3, 2, 6:4)]
+
+kable(df_wide_maiores_empresas_ano)
+
+```
 
 
