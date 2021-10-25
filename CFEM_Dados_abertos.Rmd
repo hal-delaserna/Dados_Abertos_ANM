@@ -16,60 +16,7 @@ source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Fo
 source('D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Funcoes_CFEM.R')
 
 # Carregamento ----
-cfem_BR <- #fonte: Dados Abertos
-  read.table(
-    file = paste(Sys.getenv("R_USER"), '/CSV_Data/Cfem.csv', sep = ""),
-    header = FALSE,
-    skip = 731220, # ano 2016 em diante
-    sep = ",",
-    #fill = TRUE,
-    stringsAsFactors = FALSE,
-    dec = ',',
-    quote = "\"",
-    col.names = c("periodo", "mes.de.referencia", "processo", "ano.do.Processo", "tipo.PF.PJ", "cpfcnpj", "titular", 
-                  "fase.do.Processo", "substancia.SCM", "uf", "municipio", "unidade.de.Medida", 
-                  "quantidade.Comercializada", "valor.Recolhido.CFEM"),
-    colClasses = c(processo = "character", ano.do.Processo = "character")
-    )
-
-
-# _____impondo trimestre
-cfem_BR$trimestre <-
-  lubridate::quarter(
-    lubridate::ymd(
-    paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
-  ), with_year = TRUE)
-
-# _____impondo semestre
-cfem_BR$semestre <-
-  lubridate::semester(
-    lubridate::ymd(
-      paste(cfem_BR$periodo, cfem_BR$mes.de.referencia, "1", sep = "_")
-    ), with_year = TRUE)
-
-# _____impondo mês.ANO
-cfem_BR$mes.de.referencia <-
-  as_date(paste(cfem_BR$periodo, month(cfem_BR$mes.de.referencia, label = TRUE),"1",   sep = "-")) 
-
-
-# Formatação e ajustes ----
-cfem_BR$municipio <- 
-  cfem_BR$municipio %>% str_squish() %>% FUNA_removeAcentos() %>% FUNA_minusculas()
-
-cfem_BR$uf <- 
-  str_squish(cfem_BR$uf)
-
-cfem_BR$unidade.de.Medida <- 
-  str_squish(cfem_BR$unidade.de.Medida)
-
-cfem_BR$substancia.SCM <- 
-  cfem_BR$substancia.SCM %>% str_squish() %>% FUNA_removeAcentos() %>% gsub(pattern = ";", replacement = "") %>% FUNA_minusculas()
-
-
-# id Municipio_UF ----
-cfem_BR$municipio_UF <- 
-  paste(cfem_BR$municipio, cfem_BR$uf, sep = "_")
-
+load(file = './CSV_Data/cfem_BR.RData')
 
 # _____unindo o IGP à base CFEM
 IGP_DI <-

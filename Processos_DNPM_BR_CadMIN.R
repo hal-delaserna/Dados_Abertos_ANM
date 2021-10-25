@@ -18,18 +18,15 @@ Requerimento_de_Registro_de_Extracao_Protocolizado <- read.table(file = paste(se
 
 # _____ Join das fases processuais ----
 lista_dnpm <- #Licenciamento
-  rbind(Guia_de_Utilizacao_Autorizada, rbind(Licenciamento, rbind(PLG, rbind(
-    Portaria_de_Lavra,
-#    rbind(
-      Registro_de_Extracao_Publicado #,
-#      rbind(
-#        Requerimento_de_Lavra,
-#        rbind(
-#          Requerimento_de_Licenciamento,
-#          rbind(
-#            Requerimento_de_Pesquisa,
-#            rbind(
-#              Requerimento_de_PLG,
+  rbind(Portaria_de_Lavra, 
+    rbind(Licenciamento, 
+          rbind(PLG, 
+                rbind(Guia_de_Utilizacao_Autorizada,
+#    rbind(Registro_de_Extracao_Publicado #,
+#      rbind(Requerimento_de_Lavra,
+#        rbind(Requerimento_de_Licenciamento,
+#          rbind(Requerimento_de_Pesquisa,
+#            rbind(Requerimento_de_PLG,
 #              Requerimento_de_Registro_de_Extracao_Protocolizado
             )
           )

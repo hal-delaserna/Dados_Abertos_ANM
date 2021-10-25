@@ -1,5 +1,5 @@
 #   rm(list = ls())
-#   options(editor = "notepad")
+options(editor = "notepad")
 library(tidyverse)
 source(file = "D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/Funcoes_de_Formatacao_Estilo.R")
 source(file = "D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/graficos_AMB.R")
