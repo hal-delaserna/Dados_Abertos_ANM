@@ -17,7 +17,7 @@ Requerimento_de_Registro_de_Extracao_Protocolizado <- read.table(file = paste(se
 
 
 # _____ Join das fases processuais ----
-lista_dnpm <- #Licenciamento
+lista_dnpm <-  # rbind(Portaria_de_Lavra,PLG)
   rbind(Portaria_de_Lavra, 
     rbind(Licenciamento, 
           rbind(PLG, 
@@ -158,6 +158,10 @@ write.table(x = DNPM_alvos, file = 'clipboard', )
 # anexo
 
 
+
+
+
+lista_dnpm[grepl(lista_dnpm$Processo, pattern = "^9") & grepl(lista_dnpm$Superintendência, pattern = " MG"),] %>% head()
 
 
 

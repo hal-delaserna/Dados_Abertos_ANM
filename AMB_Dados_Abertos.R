@@ -8,9 +8,11 @@ source(file = "D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoe
 
 # CARREGAMENTO ----
 #_____Bruta ----
-producao_bruta <-
+# producao_bruta <-
+producaoBRUTA <-
   read.table(
-    "D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Producao_Bruta.csv",
+    "https://app.anm.gov.br/DadosAbertos/AMB/Producao_Bruta.csv",
+    #"D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Producao_Bruta.csv",
     header = TRUE,
     sep = ",",
     dec = ",",
@@ -20,7 +22,7 @@ producao_bruta <-
   )
 
 # colunas 
-colnames(producao_bruta) <- 
+colnames(producaoBRUTA) <- 
   c("Ano", "UF", "Classe.Substancia", "Substancia", 
     "Quantidade.Producao.minerio", "Quantidade.Contido", 
     "Unidade.Contido", "Indicacao.Contido", "Quantidade.Venda", 
@@ -29,51 +31,56 @@ colnames(producao_bruta) <-
     "Quantidade.Transferencia.Transformacao.Utilizacao.Consumo", 
     "Valor.Transferencia.Transformacao.Utilizacao.Consumo")
 
-colnames(producao_bruta) <- 
-  FUNA_minusculas(
-  FUNA_removeAcentos(colnames(producao_bruta)))
+colnames(producaoBRUTA) <- 
+  tolower(
+    FUNA_removeAcentos(colnames(producaoBRUTA)))
 
 
 #__________Transformando colunas quantitativas de CHARACTER >> NUMERIC ----
 
-producao_bruta$quantidade.producao.minerio <- 
-  as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_bruta$quantidade.producao.minerio))
+producaoBRUTA$ano <- 
+  as.integer(producaoBRUTA$ano)
 
-producao_bruta$quantidade.contido <- 
+producaoBRUTA$quantidade.producao.minerio <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_bruta$quantidade.contido))
+    gsub(pattern = ",", replacement = ".", x = producaoBRUTA$quantidade.producao.minerio))
 
-producao_bruta$quantidade.venda <- 
+producaoBRUTA$quantidade.contido <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_bruta$quantidade.venda))
+    gsub(pattern = ",", replacement = ".", x = producaoBRUTA$quantidade.contido))
 
-producao_bruta$valor.venda <- 
+producaoBRUTA$quantidade.venda <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_bruta$valor.venda))
+    gsub(pattern = ",", replacement = ".", x = producaoBRUTA$quantidade.venda))
 
-producao_bruta$quantidade.transformacao.consumo.utilizacao <- 
+producaoBRUTA$valor.venda <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_bruta$quantidade.transformacao.consumo.utilizacao))
+    gsub(pattern = ",", replacement = ".", x = producaoBRUTA$valor.venda))
 
-producao_bruta$valor.transformacao.consumo.utilizacao <- 
+producaoBRUTA$quantidade.transformacao.consumo.utilizacao <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_bruta$valor.transformacao.consumo.utilizacao))
+    gsub(pattern = ",", replacement = ".", x = producaoBRUTA$quantidade.transformacao.consumo.utilizacao))
 
-producao_bruta$quantidade.transferencia.transformacao.utilizacao.consumo <- 
+producaoBRUTA$valor.transformacao.consumo.utilizacao <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_bruta$quantidade.transferencia.transformacao.utilizacao.consumo))
+    gsub(pattern = ",", replacement = ".", x = producaoBRUTA$valor.transformacao.consumo.utilizacao))
 
-producao_bruta$valor.transferencia.transformacao.utilizacao.consumo <- 
+producaoBRUTA$quantidade.transferencia.transformacao.utilizacao.consumo <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_bruta$valor.transferencia.transformacao.utilizacao.consumo))
+    gsub(pattern = ",", replacement = ".", x = producaoBRUTA$quantidade.transferencia.transformacao.utilizacao.consumo))
+
+producaoBRUTA$valor.transferencia.transformacao.utilizacao.consumo <- 
+  as.numeric(
+    gsub(pattern = ",", replacement = ".", x = producaoBRUTA$valor.transferencia.transformacao.utilizacao.consumo))
 
 
 #_____Beneficiada ----
 
-producao_beneficiada <-
+# producao_beneficiada <-
+producaoBENEFICIADA <-
   read.table(
-    "D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Producao_Beneficiada.csv",
+    "https://app.anm.gov.br/DadosAbertos/AMB/Producao_Beneficiada.csv",
+    #"D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Producao_Beneficiada.csv",
     header = TRUE,
     sep = ",",
     dec = ",",
@@ -84,88 +91,145 @@ producao_beneficiada <-
 
 
 # colunas 
-colnames(producao_beneficiada) <- 
+colnames(producaoBENEFICIADA) <- 
   c(
     "Ano","UF","Classe.Substância","Substância","Quantidade.Produção",
     "Unidade.de.Medida.Produção","Quantidade.Contido","Unidade.Contido",
     "Indicação.Contido","Quantidade.Venda","Unidade.de.Medida.Venda",
-    "Valor.Venda","Quantidade.Consumo/Utilização.na.Usina",
-    "Unidade.de.Medida.Consumo/Utilização.na.Usina",
-    "Valor.Consumo./.Utilização.na.Usina",
-    "Quantidade.Transferência.para.Transformação./.Utilização./.Consumo",
-    "Unidade.de.Medida.Transferência.para.Transformação./.Utilização./.Consumo",
-    "Valor.Transferência.para.Transformação./.Utilização./.Consumo.")
+    "Valor.Venda","Quantidade.Consumo.Utilização.na.Usina",
+    "Unidade.de.Medida.Consumo.Utilização.na.Usina",
+    "Valor.Consumo.Utilização.na.Usina",
+    "Quantidade.Transferência.para.Transformação.Utilização.Consumo",
+    "Unidade.de.Medida.Transferência.para.Transformação.Utilização.Consumo",
+    "Valor.Transferência.para.Transformação.Utilização.Consumo")
 
 
 
-colnames(producao_beneficiada) <- 
-  FUNA_minusculas(
-    FUNA_removeAcentos(colnames(producao_beneficiada)))
+colnames(producaoBENEFICIADA) <- 
+  tolower(
+    FUNA_removeAcentos(colnames(producaoBENEFICIADA)))
 
 
 #__________Transformando colunas quantitativas de CHARACTER >> NUMERIC ----
 
-producao_beneficiada$quantidade.producao <- 
+producaoBENEFICIADA$quantidade.producao <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_beneficiada$quantidade.producao))
+    gsub(pattern = ",", replacement = ".", x = producaoBENEFICIADA$quantidade.producao))
 
-producao_beneficiada$quantidade.contido <- 
+producaoBENEFICIADA$quantidade.contido <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_beneficiada$quantidade.contido))
+    gsub(pattern = ",", replacement = ".", x = producaoBENEFICIADA$quantidade.contido))
 
-producao_beneficiada$quantidade.venda <- 
+producaoBENEFICIADA$quantidade.venda <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_beneficiada$quantidade.venda))
+    gsub(pattern = ",", replacement = ".", x = producaoBENEFICIADA$quantidade.venda))
 
-producao_beneficiada$valor.venda <- 
+producaoBENEFICIADA$valor.venda <- 
   as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_beneficiada$valor.venda))
+    gsub(pattern = ",", replacement = ".", x = producaoBENEFICIADA$valor.venda))
+ 
+ producaoBENEFICIADA$quantidade.consumo.utilizacao.na.usina <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = producaoBENEFICIADA$quantidade.consumo.utilizacao.na.usina))
 
-producao_beneficiada$quantidade.transformacao.consumo.utilizacao <- 
-  as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_beneficiada$quantidade.transformacao.consumo.utilizacao))
+ producaoBENEFICIADA$valor.consumo.utilizacao.na.usina <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = producaoBENEFICIADA$valor.consumo.utilizacao.na.usina))
 
-producao_beneficiada$valor.transformacao.consumo.utilizacao <- 
-  as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_beneficiada$valor.transformacao.consumo.utilizacao))
+ producaoBENEFICIADA$quantidade.transferencia.para.transformacao.utilizacao.consumo <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = producaoBENEFICIADA$quantidade.transferencia.para.transformacao.utilizacao.consumo))
 
-producao_beneficiada$quantidade.transferencia.transformacao.utilizacao.consumo <- 
-  as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_beneficiada$quantidade.transferencia.transformacao.utilizacao.consumo))
+ producaoBENEFICIADA$valor.transferencia.para.transformacao.utilizacao.consumo <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = producaoBENEFICIADA$valor.transferencia.para.transformacao.utilizacao.consumo))
 
-producao_beneficiada$valor.transferencia.transformacao.utilizacao.consumo <- 
-  as.numeric(
-    gsub(pattern = ",", replacement = ".", x = producao_beneficiada$valor.transferencia.transformacao.utilizacao.consumo))
+ 
+ 
+ 
+ 
+ #_____Agua_Mineral ----
+ agua_Mineral <-
+   read.table(
+     "https://app.anm.gov.br/dadosabertos/AMB/Agua_Mineral_Producao.csv",
+     #"D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Agua_Mineral_Producao.csv",
+     header = TRUE,
+     sep = ",",
+     dec = ",",
+     stringsAsFactors = FALSE,
+     encoding = "iso-8859-1",
+     colClasses = c("character")
+   )
+ 
+ # colunas 
+ colnames(agua_Mineral) <- 
+   c("ano", "UF", "Classe.Substância.Mineral", "Substância.Mineral", 
+     "Quantidade.litros.Garrafão", "Quantidade.litros.Garrafa.Plástica", 
+     "Quantidade.litros.Garrafa.de.Vidro", "Quantidade.litros.Copo", 
+     "Quantidade.litros.Outras.Embalagens", "Valor.Garrafão", 
+     "Valor.Garrafa.Plástica", "Valor.Garrafa.de.Vidro", 
+     "Valor.Copo", "Valor.Outras.Embalagens", "Quantidade.litros.Composição.Produtos.Industrializados", 
+     "Valor.Composição.Produtos.Industrializados", "Unidade.de.Medida"
+   )
+ 
+ colnames(agua_Mineral) <- 
+   tolower(
+     FUNA_removeAcentos(colnames(agua_Mineral)))
+ 
+ 
+ #__________Transformando colunas quantitativas de CHARACTER >> NUMERIC ----
+ 
+ agua_Mineral$ano <- 
+   as.integer(agua_Mineral$ano)
+ 
+ agua_Mineral$quantidade.litros.garrafao <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$quantidade.litros.garrafao))
+ 
+ agua_Mineral$quantidade.litros.garrafa.plastica <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$quantidade.litros.garrafa.plastica))
+ 
+ agua_Mineral$quantidade.litros.garrafa.de.vidro <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$quantidade.litros.garrafa.de.vidro))
+ 
+ agua_Mineral$quantidade.litros.copo <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$quantidade.litros.copo))
+ 
+ agua_Mineral$quantidade.litros.outras.embalagens <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$quantidade.litros.outras.embalagens))
+ 
+ agua_Mineral$valor.garrafao <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$valor.garrafao))
+ 
+ agua_Mineral$valor.garrafa.plastica <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$valor.garrafa.plastica))
+ 
+ agua_Mineral$valor.garrafa.de.vidro <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$valor.garrafa.de.vidro))
+ 
+ agua_Mineral$valor.copo <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$valor.copo))
+ 
+ agua_Mineral$valor.outras.embalagens <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$valor.outras.embalagens))
 
+ agua_Mineral$quantidade.litros.composicao.produtos.industrializados <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$quantidade.litros.composicao.produtos.industrializados))
 
-# visões ----
-
-# Substância - UF 
-
-# producao_bruta
-df <-
-  summarise(
-    group_by(.data =
-               filter(.data = producao_bruta, substancia == "Manganês", ano %in% c(2015,2019)), ano, uf),
-    "quantidade_Venda" = sum(quantidade.venda),
-    "valor(R$)" = sum(valor.venda),
-    "ROM" = sum(quantidade.producao.minerio),
-    "Quantidade_Contido" = sum(quantidade.contido),
-    "unidade_contido" = unique(unidade.contido))
-
-
-# producao_beneficiada
-df <-
-  summarise(
-    group_by(.data =
-               filter(.data = producao_beneficiada, substancia == "Manganês", ano %in% c(2015,2019)), ano, uf),
-    "quantidade_Venda" = sum(quantidade.venda),
-    "valor(R$)" = sum(valor.venda),
-    "quantidade.producao" = sum(quantidade.producao),
-    "Quantidade_Contido" = sum(quantidade.contido),
-    "unidade_contido" = unique(unidade.contido))
-
-
+ agua_Mineral$valor.composicao.produtos.industrializados <- 
+   as.numeric(
+     gsub(pattern = ",", replacement = ".", x = agua_Mineral$valor.composicao.produtos.industrializados))
+ 
 
 # write.table(df, file = "clipboard", sep = "\t", na = "", row.names = FALSE, dec = ",")
 

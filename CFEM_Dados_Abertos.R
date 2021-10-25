@@ -78,7 +78,13 @@ cfem_BR$unidade.de.Medida <-
   str_squish(cfem_BR$unidade.de.Medida)
 
 cfem_BR$substancia.SCM <- 
-  cfem_BR$substancia.SCM %>% str_squish() %>% FUNA_removeAcentos() %>% gsub(pattern = ";", replacement = "") %>% FUNA_minusculas()
+  cfem_BR$substancia.SCM %>% str_squish() %>% FUNA_removeAcentos() %>% gsub(pattern = ";", replacement = "")
+
+cfem_BR$substancia.AMB <- 
+  cfem_BR$substancia.SCM
+
+cfem_BR$substancia.AMB <- 
+  cfem_BR$substancia.AMB %>% FUNA_minusculas()
 
 # id Municipio_UF
 cfem_BR$municipio_UF <- 
@@ -106,18 +112,64 @@ cfem_BR[cfem_BR$cpfcnpj == "11.495.073/0001-18",]$titular  <- c("om dtvm ltda")
 cfem_BR[cfem_BR$cpfcnpj == "00.460.065/0001-10",]$titular  <- c("coluna sa dtvm")	
 cfem_BR[cfem_BR$cpfcnpj == "62.237.649/0001-88",]$titular  <- c("carol dtvm")	
 
-# Ajuste de Substâncias ----
+# Ajuste de Substância AMB ----
+
+# Água Mineral
 for (i in 1:nrow(cfem_BR)) {
-  if (grepl(cfem_BR$substancia.SCM[i], pattern = "agua mineral|potavel|termal|termais")) {
-    cfem_BR$substancia.SCM[i] <- c("agua mineral")
+  if (grepl(cfem_BR$substancia.AMB[i], pattern = "agua mineral|potavel|termal|termais")) {
+    cfem_BR$substancia.AMB[i] <- c("agua mineral")
+  } 
+}
+
+# Areia 
+for (i in 1:nrow(cfem_BR)) {
+  if (grepl(cfem_BR$substancia.AMB[i], pattern = "areia aluvionar|areia comum|areia fluvial|areia in natura|areia lavada")) {
+    cfem_BR$substancia.AMB[i] <- c("areia")
   }
 }
-  
+
+# Areia INDUSTRIAL
+for (i in 1:nrow(cfem_BR)) {
+  if (grepl(cfem_BR$substancia.AMB[i], pattern = "areia de fundicao|areia p/ vidro|areia quartzosa")) {
+    cfem_BR$substancia.AMB[i] <- c("areia industrial")
+  }
+}
+
+
+# BRITA 
+for (i in 1:5000) {
+  if (grepl(cfem_BR$substancia.AMB[i], pattern = "^brita$|britada|cascalho|pedregulho|^granito$|basalto")) {
+    cfem_BR$substancia.AMB[i] <- c("rochas britadas e cascalho")
+  }
+}
+
+# ORNAMENTAL 
+for (i in 1:nrow(cfem_BR)) {
+  if (grepl(cfem_BR$substancia.AMB[i], pattern = "ornamental|revestimento")) {
+    cfem_BR$substancia.AMB[i] <- c("rochas ornamentais")
+  }
+}
+
+
+# ARGILAS
+
+for (i in 1:nrow(cfem_BR)) {
+  if (grepl(cfem_BR$substancia.AMB[i], pattern = "argila branca")) {
+    cfem_BR$substancia.AMB[i] <- c("argilas plásticas")
+  } else {
+    if (grepl(cfem_BR$substancia.AMB[i], 
+              pattern = "argila comum|argila ferruginosa|argila p/cer. vermelh|argila vermelha|argila p/cer. vermelha")) {
+      cfem_BR$substancia.AMB[i] <- c("argilas comuns")
+    }
+     
+    
+  }
+}
 
 # AREIA ----
 # _____ ajuste de unidades de massa e volume (tentativa de) ----
 for (i in 1:nrow(cfem_BR)) {
-  if (grepl(cfem_BR$substancia[i], pattern = "areia")) {
+  if (grepl(cfem_BR$substancia.AMB[i], pattern = "^areia$")) {
     
     if (cfem_BR$unidade.de.Medida[i] == "m3") {
       

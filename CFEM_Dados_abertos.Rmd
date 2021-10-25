@@ -1,10 +1,13 @@
 ---
 title: "CFEM dados abertos"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+options(editor = 'notepad')
 
 library(tidyverse)
 library(lubridate)
@@ -16,7 +19,7 @@ source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Fo
 source('D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Funcoes_CFEM.R')
 
 # Carregamento ----
-load(file = './CSV_Data/cfem_BR.RData')
+load(file = 'D:/Users/humberto.serna/Documents/CSV_Data/cfem_BR.RData')
 
 # _____unindo o IGP à base CFEM
 IGP_DI <-
@@ -37,6 +40,14 @@ for (i in 1:nrow(cfem_BR)) {
     cfem_BR$valor.Recolhido.CFEM[i] * (IGP_DI[IGP_DI$Data == "2020-12-01", "IGP_DI"] /
                                          cfem_BR$IGP_DI[i])
 }
+
+
+# vetor de valores unitários ----
+
+
+cfem_BR$valor_unitario <- 
+  round(
+    cfem_BR$valor.Recolhido.CFEM / cfem_BR$quantidade.Comercializada, digits = 2)
 
 
 ```
@@ -154,5 +165,43 @@ df_wide_maiores_empresas_ano <-
 kable(df_wide_maiores_empresas_ano)
 
 ```
+
+
+
+```{r}
+
+ornamentais <- c("CALCARIO", "QUARTZITO", "DOLOMITO", "GRANITO", "ARENITO", "GRANITO ORNAMENTAL", 
+"GNAISSE", "BASALTO", "ARDOSIA", "CALCARIO CALCITICO", "DIABASIO", "BASALTO P/ REVESTIMENTO", 
+"GRANODIORITO", "GRANITO P/ REVESTIMENTO", "QUARTZITO SERICITICO", 
+"GRANITO GNAISSICO", "MARMORE P/ REVESTIMENTO","GRANADA", "GNAISSE ORNAMENTAL")
+
+summarise(
+  group_by(
+    cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = "ORNAMENT") & 
+              cfem_BR$periodo == 2020,], substancia.SCM),
+  mean(valor_unitario, trim = 0.05))
+
+
+
+
+cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = "ORNAMENT") & 
+              cfem_BR$periodo == 2020,]$valor_unitario %>% boxplot()
+
+
+
+
+summarise(
+  group_by(
+    cfem_BR[cfem_BR$unidade.de.Medida %in% c("m3-> t", "m3", "m2") &
+              cfem_BR$periodo == 2020 &
+      cfem_BR$substancia.SCM %in% ornamentais,],
+    substancia.AMB
+  ),
+  mean(valor_unitario, na.rm = T)
+)
+
+
+```
+
 
 
