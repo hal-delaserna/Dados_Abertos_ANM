@@ -21,7 +21,7 @@ lista_dnpm <-  # rbind(Portaria_de_Lavra,PLG)
   rbind(Portaria_de_Lavra, 
     rbind(Licenciamento, 
           rbind(PLG, 
-                rbind(Guia_de_Utilizacao_Autorizada,
+                rbind(Guia_de_Utilizacao_Autorizada#,
 #    rbind(Registro_de_Extracao_Publicado #,
 #      rbind(Requerimento_de_Lavra,
 #        rbind(Requerimento_de_Licenciamento,
@@ -162,6 +162,9 @@ write.table(x = DNPM_alvos, file = 'clipboard', )
 
 
 lista_dnpm[grepl(lista_dnpm$Processo, pattern = "^9") & grepl(lista_dnpm$Superintendência, pattern = " MG"),] %>% head()
+
+
+
 
 
 
