@@ -1,14 +1,18 @@
-library(tidyverse)
-library(ipeadatar)
-library(lubridate)
+rm(list = ls())
 
 
-IGP_IPAI <-
-  ipeadatar::ipeadata(code = "IGP_IPAI")
+IGP_IPAI <- httr::GET(
+  sprintf("http://ipeadata.gov.br/api/odata4/ValoresSerie(SERCODIGO='%s')", "IGP_IPAI")
+)
+
+IGP_IPAI <- 
+  dplyr::mutate(dplyr::select(dplyr::bind_rows(httr::content(IGP_IPAI)[[2]]), 
+                                "ano" = `VALDATA`, "value" = `VALVALOR`),
+                  ano = lubridate::year(ano))
+
+
 # IPA-DI - origem - prod. industriais - índice (ago. 1994 = 100)
 
-IGP_IPAI$ano <- 
-  lubridate::year(IGP_IPAI$date)
 
 
 Producao_Bruta <-
@@ -34,7 +38,6 @@ Agua_Mineral_Producao <-
     header = TRUE, 
     dec = ","
   )
-
 
 
 Producao_Bruta$DFL_Valor.Venda..R.. <- NA

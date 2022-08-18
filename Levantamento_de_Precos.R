@@ -14,7 +14,7 @@ source(file = "D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/carreg
 #_____ carregamento GeoCod -----
 GeoCodigos_IBGE <-
   read.table(
-    file = paste(Sys.getenv('R_USER'), "/CSV_Data/GeoCodigos_IBGE.csv", sep = ""),
+    file = paste(Sys.getenv('R_USER'), "/D_Lake/GeoCodigos_IBGE.csv", sep = ""),
     header = TRUE,
     sep = ";",
     quote = "",
@@ -26,7 +26,7 @@ GeoCodigos_IBGE <-
 #_____ Carregamento CFEM_DADOS ABERTOS ----
 
 cfem_BR <- #fonte: Dados Abertos
-  read.table(file = paste(Sys.getenv("R_USER"),'/CSV_Data/cfem.csv', sep = ""),
+  read.table(file = paste(Sys.getenv("R_USER"),'/D_Lake/cfem.csv', sep = ""),
              header = TRUE,sep = ",",fill = TRUE,stringsAsFactors = FALSE, dec = ',',
              colClasses = c(Processo = "character", CPF.CNPJ = "character"))
 

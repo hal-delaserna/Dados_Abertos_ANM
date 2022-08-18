@@ -16,15 +16,15 @@ library(knitr)
 
 source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/Funcoes_de_Formatacao_Estilo.r')
 source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/graficos_AMB.r')
-source('D:/Users/humberto.serna/Documents/CSV_Data/Dados_Abertos_ANM/Funcoes_CFEM.R')
+source('D:/Users/humberto.serna/Documents/D_Lake/Dados_Abertos_ANM/Funcoes_CFEM.R')
 
 # Carregamento ----
-load(file = 'D:/Users/humberto.serna/Documents/CSV_Data/cfem_BR.RData')
+load(file = 'D:/Users/humberto.serna/Documents/D_Lake/cfem_BR.RData')
 
 # _____unindo o IGP à base CFEM
 IGP_DI <-
   read.table(
-    file = paste(Sys.getenv("R_USER"), '/CSV_Data/IGP_DI.csv', sep = ""),
+    file = paste(Sys.getenv("R_USER"), '/D_Lake/IGP_DI.csv', sep = ""),
     header = TRUE,sep = ";",stringsAsFactors = FALSE, dec = ',')
 IGP_DI$Data <- ymd(IGP_DI$Data)
 
@@ -34,12 +34,12 @@ cfem_BR <-
 
 # vetor de valores reais (DEZ2020)---- 
 
-cfem_BR$valor.Real <- NA
-for (i in 1:nrow(cfem_BR)) {
-  cfem_BR$valor.Real[i] <-
-    cfem_BR$valor.Recolhido.CFEM[i] * (IGP_DI[IGP_DI$Data == "2020-12-01", "IGP_DI"] /
-                                         cfem_BR$IGP_DI[i])
-}
+# cfem_BR$valor.Real <- NA
+# for (i in 1:nrow(cfem_BR)) {
+#   cfem_BR$valor.Real[i] <-
+#     cfem_BR$valor.Recolhido.CFEM[i] * (IGP_DI[IGP_DI$Data == "2020-12-01", "IGP_DI"] /
+#                                          cfem_BR$IGP_DI[i])
+# }
 
 
 # vetor de valores unitários ----

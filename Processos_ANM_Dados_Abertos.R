@@ -1,4 +1,4 @@
-rm(list = ls())
+# rm(list = ls())
 
 if (!require(svDialogs)) {
   install.packages('svDialogs')
@@ -6,11 +6,9 @@ if (!require(svDialogs)) {
 }
 
 
-# Simpler version with msgBox and okCancelBox
-
 
 res <- 
-  dlg_message(c("Baixar arquivos de DadosAbertos.gov? Se possuir os arquivos clique 'no'"),
+  dlg_message(c("Baixar arquivos de DadosAbertos.gov? Se os baixou clique 'no'"),
             "yesno")$res
 
 if (res == "yes") {
@@ -52,7 +50,7 @@ if (res == "yes") {
         sep = ",",
         fill = TRUE,
         stringsAsFactors = FALSE,
-        encoding = "ANSI",
+        encoding = "ANSI", 
         quote = "\""
       )
   }
@@ -69,10 +67,10 @@ if (res == "yes") {
   if (res == "yes") {
     
   prevdir <-
-    dlgDir(default = getwd(), title = 'Informe a pasta dos arquivos baixados.')$res
+    dlgDir(default = getwd(), title = 'INFORME A PASTA DOS ARQUIVOS BAIXADOS.')$res
   
   arquivos <-
-    dlgList(
+    dlgList(preselect = c('Licenciamento.csv','PLG.csv','Portaria_de_Lavra.csv','Registro_de_Extracao_Publicado.csv','Requerimento_de_Lavra.csv','Requerimento_de_Licenciamento.csv','Requerimento_de_Pesquisa.csv','Requerimento_de_PLG.csv','Requerimento_de_Registro_de_Extracao_Protocolizado.csv'),
       c(
         'Licenciamento.csv',
         'PLG.csv',
@@ -85,7 +83,7 @@ if (res == "yes") {
         'Requerimento_de_Registro_de_Extracao_Protocolizado.csv'
       ),
       multiple = TRUE,
-      title = 'Selecionae vários usando CTRL'
+      title = 'CTRL + mouse para selecionar diversos'
     )$res
   
   processos_ANM <- as.list(NA)
@@ -95,13 +93,18 @@ if (res == "yes") {
       read.table(
         file = paste(sep = "/", prevdir, arquivos[[i]]),
         header = TRUE,
-        sep = ";",
-        fill = TRUE, quote = "",
-        stringsAsFactors = FALSE, encoding = "ANSI"
+        sep = ",",
+        fill = TRUE,
+        stringsAsFactors = FALSE,
+        encoding = "ANSI", 
+        quote = "\""
       )
   }
   
   processos_ANM <-
     do.call("rbind", processos_ANM)
 }} 
+
+
+# saveRDS(processos_ANM, 'D:/Users/humberto.serna/Documents/D_Lake/Processos_ANM_Dados_Abertos.RDATA')
 
