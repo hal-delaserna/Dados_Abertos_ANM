@@ -1,0 +1,301 @@
+---
+title: ""
+output: 
+  html_document:
+    css: "www/anm_identidade_visual.css"
+---
+
+```{css echo=FALSE}
+p{
+  font-family: Open Sans;
+  font-style: normal;color: #000000;
+  font-size: 12pt; 
+  text-align: justify;
+}
+chunkCSS{
+ background-color: #ffffcc;
+}
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(kableExtra)
+library(knitr)
+source("D:/Users/humberto.serna/Documents/D_Lake/Dados_Abertos_ANM/AMB_Dados_Abertos.R")
+source("D:/Users/humberto.serna/Documents/D_Lake/Dados_Abertos_ANM/Funcoes_Producao_AMB.R")
+```
+
+```{r SUBS_Agrupadora, include=FALSE}
+
+SUBS_Agrupadora <- #"." 
+"Zircônio|Berílio|Feldspato, Leucita e Nefelina-Sienito|Tântalo|Titânio|Zircônio|Cianita e outros minerais refratários|Turfa|Bário|Nióbio|Diatomita"
+
+
+
+#"Alumínio (Bauxita)|Chumbo|Cobre|Cromo|Estanho|Ferro"#|Lítio|Manganês|Nióbio|Níquel|Ouro|Platina (Grupo da)|Prata|Tântalo|Titânio|Tungstênio|Vanádio|Zinco|Zircônio"
+  
+```
+
+```{r carregamento, include=FALSE}
+# Substância - UF 
+
+df_bruta_Q <- BRUTA_Quantidade_groupBY_SUBSTANCIA(SUBS_Agrupadora = SUBS_Agrupadora)
+df_bruta_Valor <- BRUTA_Valor_groupBY_SUBSTANCIA(volume = "vpm", SUBS_Agrupadora = SUBS_Agrupadora)
+df_benef_Q <- BENEFICIADA_Quantidade_groupBY_SUBSTANCIA(SUBS_Agrupadora = SUBS_Agrupadora)
+df_benef_Valor <- BENEFICIADA_Valor_groupBY_SUBSTANCIA(volume = "vpm", SUBS_Agrupadora = SUBS_Agrupadora)
+
+df_bruta_Q_UF <- BRUTA_Quantidade_groupBY_UF(SUBS_Agrupadora = SUBS_Agrupadora)
+df_bruta_Valor_UF <- BRUTA_Valor_groupBY_UF(SUBS_Agrupadora = SUBS_Agrupadora)
+df_benef_Q_UF <- BENEFICIADA_Quantidade_groupBY_UF(SUBS_Agrupadora = SUBS_Agrupadora)
+df_benef_Valor_UF <- BENEFICIADA_Valor_groupBY_UF(SUBS_Agrupadora = SUBS_Agrupadora)
+
+```
+
+
+<div class="titulo_secao"> `r toupper("titulo_secao")` </div>
+
+<br />
+
+<div class="titulo_subsecao"> i. &nbsp;tópico primeiro </div>
+<p >
+
+Tabela 1 com a *produção bruta (t)* das substâncias de interesse. E a representação gráfica respectiva (gráfico 1)
+
+</p>
+ 
+<br />
+
+<table class = "tabela_frontao"><tr><th class = "tabela_frontao_numero"> TABELA 1 </th><th class="tabela_frontao_titulo"> PRODUÇÃO BRUTA POR ANO E SUBSTÂNCIA (T) </th></tr></table>
+```{r TABELA 1 PRODUÇÃO BRUTA POR ANO E SUBSTÂNCIA, echo=FALSE, message=FALSE, warning=FALSE}
+kableExtra::kable(
+  df_bruta_Q[, c("Substância.Mineral",# "2013", "2014", "2015", "2016", "2017", 
+"2018", "2019", "2020", "2021")],
+  col.names = c("    Substância", #"2013", "2014", "2015", "2016", "2017", 
+"2018", "2019", "2020", "2021"),
+  align = c("l", "c" ,
+             "c", 
+             "c", 
+             "c", 
+             "c", 
+             # "c", 
+             # "c", 
+             # "c", 
+             "c"
+            ),
+  format.args = list(big.mark = ".", decimal.mark = ",", scientific = FALSE), digits = 1)  %>% 
+  kable_styling(htmltable_class = "tabela_sumario") #%>%
+  # add_header_above(c(" ", "Reserva (t)" = 1, "Produção (t)" = 3), 
+  # extra_css = "white-space: nowrap; padding: 6px; border-bottom: 2px solid #ffffff;", line = FALSE)
+
+```
+
+<br />
+
+<div style=" display: block; margin-right: auto; margin-left: auto; width: 100%; border-bottom-color: #858585; border-bottom-style:solid; border-bottom-width: 6px;">
+<table class = "tabela_frontao"><tr><th class = "tabela_frontao_numero"> GRÁFICO 1 </th><th class="tabela_frontao_titulo"> PRODUÇÃO BRUTA POR ANO E SUBSTÂNCIA (MILHÕES R$) </th></tr></table><br />
+```{r GRAFICO 1 PRODUÇÃO BRUTA POR ANO E SUBSTÂNCIA, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', class.source='chunkCSS'}
+
+df <- 
+  tidyr::pivot_longer(
+    df_bruta_Q[, c("Substância.Mineral",# "2013", "2014","2015", "2016", "2017", 
+"2018", "2019", "2020", "2021")], 
+    cols = 2:5, names_to = "Ano")
+
+
+df$value <- df$value/1000000
+
+ggplot(data = df, aes(as.factor(Ano), y = value)) + 
+  geom_bar(stat = "identity", fill = "#FFCC00")  + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + 
+  # theme(panel.background = element_rect(fill = 'white')) +
+  facet_wrap(facets = ~Substância.Mineral, scales = "free_y", dir = "v")
+
+```
+</div>
+
+<br />
+
+
+
+<div class="titulo_subsecao"> ii. &nbsp;tópico segundo</div>
+
+<p>
+A produção beneficiada está reproduzida na **tabela 2** e **gráfico 2**, para as substâncias de interesse.
+</p>
+
+
+<br /> 
+
+<table class = "tabela_frontao"><tr><th class = "tabela_frontao_numero"> TABELA 1 </th><th class="tabela_frontao_titulo"> PRODUÇÃO BENEFICIADA (t) POR ANO E SUBSTÂNCIA  </th></tr></table>
+```{r TABELA 1 PRODUÇÃO BENEFICIADA (t) POR ANO E SUBSTÂNCIA, echo=FALSE, message=FALSE, warning=FALSE}
+kableExtra::kable(
+  df_benef_Q[, c("Substância.Mineral",# "2013", "2014", "2015", "2016", "2017", 
+                 "2018", "2019", "2020", "2021")],
+  col.names = c("    Substância", #"2013", "2014", "2015", "2016", "2017", 
+                "2018", "2019", "2020", "2021"),
+  align = c("l", "c" ,
+            "c", 
+            "c", 
+            "c", 
+            "c", 
+            # "c", 
+            # "c", 
+            # "c", 
+            "c"
+  ),
+  format.args = list(big.mark = ".", decimal.mark = ",", scientific = FALSE), digits = 1)  %>% 
+  kable_styling(htmltable_class = "tabela_sumario") #%>%
+# add_header_above(c(" ", "Reserva (t)" = 1, "Produção (t)" = 3), 
+# extra_css = "white-space: nowrap; padding: 6px; border-bottom: 2px solid #ffffff;", line = FALSE)
+
+```
+
+<br />
+  
+  <div style=" display: block; margin-right: auto; margin-left: auto; width: 100%; border-bottom-color: #858585; border-bottom-style:solid; border-bottom-width: 6px;">
+  <table class = "tabela_frontao"><tr><th class = "tabela_frontao_numero"> GRÁFICO 1 </th><th class="tabela_frontao_titulo"> PRODUÇÃO BENEFICIADA POR ANO E SUBSTÂNCIA (10³ T) </th></tr></table> <br />
+```{r GRAFICO 1 PRODUÇÃO BENEFICIADA POR ANO E SUBSTÂNCIA, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', class.source='chunkCSS'}
+
+df <- 
+  tidyr::pivot_longer(
+    df_benef_Q[, c("Substância.Mineral",# "2013", "2014","2015", "2016", "2017", 
+                   "2018", "2019", "2020", "2021")], 
+    cols = 2:5, names_to = "Ano")
+
+df$value <- df$value/1000
+
+ggplot(data = df, aes(as.factor(Ano), y = value)) + 
+  geom_bar(stat = "identity", fill = "#FFCC00")  + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5), ) + 
+  # theme(panel.background = element_rect(fill = 'white')) +
+  facet_wrap(facets = ~Substância.Mineral, scales = "free_y", dir = "v")
+
+```
+</div>
+
+<br />
+
+
+<div class="titulo_subsecao"> iii. &nbsp;tópico segundo</div>
+
+<p>
+As produções beneficiada e bruta das tabelas anteriores corresponde, em escala monetária nominal, ao *valor da produção mineral* da **tabela 3**, qual seja, o total das vendas para terceiros, das transferências internas e do consumo próprio (tabela 3 e gráfico 3).
+</p>
+
+
+<br /> 
+
+<table class = "tabela_frontao"><tr><th class = "tabela_frontao_numero"> TABELA 3 </th><th class="tabela_frontao_titulo"> VPM BENEFICIADA POR ANO E SUBSTÂNCIA (R$) </th></tr></table>
+```{r TABELA 3 VPM BENEFICIADA POR ANO E SUBSTÂNCIA, echo=FALSE, message=FALSE, warning=FALSE}
+kableExtra::kable(
+  df_benef_Valor[, c("Substância.Mineral",# "2013", "2014","2015", "2016", "2017", 
+"2018", "2019", "2020", "2021")],
+  col.names = c("    Substância", #"2013", "2014","2015", "2016", "2017", 
+"2018", "2019", "2020", "2021"),
+  align = c("l", "c" ,
+             "c", 
+             "c", 
+             "c", 
+             "c", 
+             # "c", 
+             # "c", 
+             # "c", 
+             "c"
+            ),
+  format.args = list(big.mark = ".", decimal.mark = ",", scientific = FALSE), digits = 1)  %>% 
+  kable_styling(htmltable_class = "tabela_sumario") #%>%
+  # add_header_above(c(" ", "Reserva (t)" = 1, "Produção (t)" = 3), 
+  # extra_css = "white-space: nowrap; padding: 6px; border-bottom: 2px solid #ffffff;", line = FALSE)
+
+```
+
+<br />
+
+<div style=" display: block; margin-right: auto; margin-left: auto; width: 100%; border-bottom-color: #858585; border-bottom-style:solid; border-bottom-width: 6px;">
+<table class = "tabela_frontao"><tr><th class = "tabela_frontao_numero"> GRÁFICO 3 </th><th class="tabela_frontao_titulo"> VPM BENEFICIADA POR ANO E SUBSTÂNCIA (MILHÕES R$) </th></tr></table><br />
+```{r GRAFICO 3 VPM BENEFICIADA POR ANO E SUBSTÂNCIA, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', class.source='chunkCSS'}
+
+df <- 
+  tidyr::pivot_longer(
+    df_benef_Valor[, c("Substância.Mineral",# "2013", "2014","2015", "2016", "2017", 
+"2018", "2019", "2020", "2021")], 
+    cols = 2:5, names_to = "Ano")
+
+
+df$value <- df$value/1000000
+
+ggplot(data = df, aes(as.factor(Ano), y = value)) + 
+  geom_bar(stat = "identity", fill = "#FFCC00")  + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + 
+  # theme(panel.background = element_rect(fill = 'white')) +
+  facet_wrap(facets = ~Substância.Mineral, scales = "free_y", dir = "v")
+
+```
+</div>
+
+<br />
+
+
+
+<div class="titulo_subsecao"> iv. &nbsp;tópico segundo</div>
+
+<p>
+Em termos globais, o *valor da produção mineral brasileira total* está reproduzido na *tabela 4* e *gráfico 4*
+</p>
+
+
+<br /> 
+
+<table class = "tabela_frontao"><tr><th class = "tabela_frontao_numero"> TABELA 4 </th><th class="tabela_frontao_titulo"> VPM POR ANO E SUBSTÂNCIA (R$) </th></tr></table>
+```{r TABELA 4 VPM TOTAL POR ANO E SUBSTÂNCIA VPM BENEFICIADA POR ANO E SUBSTÂNCIA, echo=FALSE, message=FALSE, warning=FALSE}
+
+df_vpm <- summarise(group_by(rbind(pivot_longer(df_benef_Valor, cols = c(#"2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017",
+  "2018", "2019", "2020", "2021")),
+    pivot_longer(df_bruta_Valor, cols = c(#"2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", 
+  "2018", "2019", "2020", "2021"))), name, Substância.Mineral), 
+  "vpm" = sum(value))
+
+kableExtra::kable(
+  pivot_wider(df_vpm, names_from = name, values_from = vpm)[,c("Substância.Mineral", #2010, #2011, #2012, #"2013", "2014", "2015", "2016", "2017", 
+"2018", "2019", "2020", "2021")],
+  col.names = c("    Substância.Mineral", #2010, #2011, #2012, #"2013", "2014", "2015", "2016", "2017", 
+"2018", "2019", "2020", "2021"),
+  align = c("l", "c" ,
+             "c", 
+             "c", 
+             "c", 
+             "c", 
+             # "c", 
+             # "c", 
+             # "c", 
+             "c"
+            ),
+  format.args = list(big.mark = ".", decimal.mark = ",", scientific = FALSE), digits = 1)  %>% 
+  kable_styling(htmltable_class = "tabela_sumario") #%>%
+  # add_header_above(c(" ", "Reserva (t)" = 1, "Produção (t)" = 3), 
+  # extra_css = "white-space: nowrap; padding: 6px; border-bottom: 2px solid #ffffff;", line = FALSE)
+
+```
+
+<br />
+
+<div style=" display: block; margin-right: auto; margin-left: auto; width: 100%; border-bottom-color: #858585; border-bottom-style:solid; border-bottom-width: 6px;">
+<table class = "tabela_frontao"><tr><th class = "tabela_frontao_numero"> GRÁFICO 4 </th><th class="tabela_frontao_titulo"> VPM POR ANO E SUBSTÂNCIA (MILHÕES R$) </th></tr></table><br />
+```{r GRAFICO 4 VPM TOTAL POR ANO E SUBSTÂNCIA VPM BENEFICIADA POR ANO E SUBSTÂNCIA, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', class.source='chunkCSS'}
+
+df_vpm$vpm <- df_vpm$vpm/1000000
+
+ggplot(data = df_vpm, aes(as.factor(name), y = vpm)) + 
+  geom_bar(stat = "identity", fill = "#FFCC00")  + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + 
+  # theme(panel.background = element_rect(fill = 'white')) +
+  facet_wrap(facets = ~Substância.Mineral, scales = "free_y", dir = "v")
+
+```
+</div>
+
+<br />
+
+
