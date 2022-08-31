@@ -1,30 +1,30 @@
 library(tidyverse)
 
-# Fun��es ----
+# Fun??es ----
 
 
 
 
 # FUNA_CFEM_Substancia_Ano
 FUNA_CFEM_GroupBY_Substancia_Ano <-
-  function(substancia = ".",
-           cpfcnpj = ".",
-           municipio = ".",
-           uf = ".",
-           anos = ".",
+  function(Substância = ".",
+           CPF_CNPJ = ".",
+           Município = ".",
+           UF = ".",
+           Ano = ".",
            nominal = TRUE) {
     if (nominal == TRUE) {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(periodo, substancia.SCM) %>%
-            summarise(sum(valor.Recolhido.CFEM)),
-          key = periodo,
-          value = `sum(valor.Recolhido.CFEM)`
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(Ano, Substância) %>%
+            summarise(sum(ValorRecolhido)),
+          key = Ano,
+          value = `sum(ValorRecolhido)`
         )
       
       return(x)
@@ -32,14 +32,14 @@ FUNA_CFEM_GroupBY_Substancia_Ano <-
     } else {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(periodo, substancia.SCM) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(Ano, Substância) %>%
             summarise(sum(valor.Real)),
-          key = periodo,
+          key = Ano,
           value = `sum(valor.Real)`
         )
       return(x)
@@ -49,24 +49,24 @@ FUNA_CFEM_GroupBY_Substancia_Ano <-
 
 # FUNA_CFEM_Substancia_Semestre
 FUNA_CFEM_GroupBY_Substancia_Semestre <-
-  function(substancia = ".",
-           cpfcnpj = ".",
-           municipio = ".",
-           uf = ".",
-           anos = ".",
+  function(Substância = ".",
+           CPF_CNPJ = ".",
+           Município = ".",
+           UF = ".",
+           Ano = ".",
            nominal = TRUE) {
     if (nominal == TRUE) {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(semestre, substancia.SCM) %>%
-            summarise(sum(valor.Recolhido.CFEM)),
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(semestre, Substância) %>%
+            summarise(sum(ValorRecolhido)),
           key = semestre,
-          value = `sum(valor.Recolhido.CFEM)`
+          value = `sum(ValorRecolhido)`
         )
       
       return(x)
@@ -74,12 +74,12 @@ FUNA_CFEM_GroupBY_Substancia_Semestre <-
     } else {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(semestre, substancia.SCM) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(semestre, Substância) %>%
             summarise(sum(valor.Real)),
           key = semestre,
           value = `sum(valor.Real)`
@@ -94,24 +94,24 @@ FUNA_CFEM_GroupBY_Substancia_Semestre <-
 
 # FUNA_CFEM_Substancia_Trimestre
 FUNA_CFEM_GroupBY_Substancia_Trimestre <-
-  function(substancia = ".",
-           cpfcnpj = ".",
-           municipio = ".",
-           uf = ".",
-           anos = ".",
+  function(Substância = ".",
+           CPF_CNPJ = ".",
+           Município = ".",
+           UF = ".",
+           Ano = ".",
            nominal = TRUE) {
     if (nominal == TRUE) {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(trimestre, substancia.SCM) %>%
-            summarise(sum(valor.Recolhido.CFEM)),
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(trimestre, Substância) %>%
+            summarise(sum(ValorRecolhido)),
           key = trimestre,
-          value = `sum(valor.Recolhido.CFEM)`
+          value = `sum(ValorRecolhido)`
         )
       
       return(x)
@@ -119,12 +119,12 @@ FUNA_CFEM_GroupBY_Substancia_Trimestre <-
     } else {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(trimestre, substancia.SCM) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(trimestre, Substância) %>%
             summarise(sum(valor.Real)),
           key = trimestre,
           value = `sum(valor.Real)`
@@ -136,26 +136,26 @@ FUNA_CFEM_GroupBY_Substancia_Trimestre <-
 
 
 
-# FUNA_CFEM_Substancia_M�s
+# FUNA_CFEM_Substancia_M?s
 FUNA_CFEM_GroupBY_Substancia_Mes <-
-  function(substancia = ".",
-           cpfcnpj = ".",
-           municipio = ".",
-           uf = ".",
-           anos = ".",
+  function(Substância = ".",
+           CPF_CNPJ = ".",
+           Município = ".",
+           UF = ".",
+           Ano = ".",
            nominal = TRUE) {
     if (nominal == TRUE) {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(mes.de.referencia, substancia.SCM) %>%
-            summarise(sum(valor.Recolhido.CFEM)),
-          key = mes.de.referencia,
-          value = `sum(valor.Recolhido.CFEM)`
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(Período, Substância) %>%
+            summarise(sum(ValorRecolhido)),
+          key = Período,
+          value = `sum(ValorRecolhido)`
         )
       
       return(x)
@@ -163,14 +163,14 @@ FUNA_CFEM_GroupBY_Substancia_Mes <-
     } else {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(mes.de.referencia, substancia.SCM) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(Período, Substância) %>%
             summarise(sum(valor.Real)),
-          key = mes.de.referencia,
+          key = Período,
           value = `sum(valor.Real)`
         )
       return(x)
@@ -182,24 +182,24 @@ FUNA_CFEM_GroupBY_Substancia_Mes <-
 
 # FUNA_CFEM_Ano
 FUNA_CFEM_GroupBY_Ano <-
-  function(substancia = ".",
-           cpfcnpj = ".",
-           municipio = ".",
-           uf = ".",
-           anos = ".",
+  function(Substância = ".",
+           CPF_CNPJ = ".",
+           Município = ".",
+           UF = ".",
+           Ano = ".",
            nominal = TRUE) {
     if (nominal == TRUE) {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(periodo) %>%
-            summarise(sum(valor.Recolhido.CFEM)),
-          key = periodo,
-          value = `sum(valor.Recolhido.CFEM)`
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(Ano) %>%
+            summarise(sum(ValorRecolhido)),
+          key = Ano,
+          value = `sum(ValorRecolhido)`
         )
       
       return(x)
@@ -207,14 +207,14 @@ FUNA_CFEM_GroupBY_Ano <-
     } else {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(periodo) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(Ano) %>%
             summarise(sum(valor.Real)),
-          key = periodo,
+          key = Ano,
           value = `sum(valor.Real)`
         )
       return(x)
@@ -226,24 +226,24 @@ FUNA_CFEM_GroupBY_Ano <-
 
 # FUNA_CFEM_Semestre
 FUNA_CFEM_GroupBY_Semestre <-
-  function(substancia = ".",
-           cpfcnpj = ".",
-           municipio = ".",
-           uf = ".",
-           anos = ".",
+  function(Substância = ".",
+           CPF_CNPJ = ".",
+           Município = ".",
+           UF = ".",
+           Ano = ".",
            nominal = TRUE) {
     if (nominal == TRUE) {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
             group_by(semestre) %>%
-            summarise(sum(valor.Recolhido.CFEM)),
+            summarise(sum(ValorRecolhido)),
           key = semestre,
-          value = `sum(valor.Recolhido.CFEM)`
+          value = `sum(ValorRecolhido)`
         )
       
       return(x)
@@ -251,11 +251,11 @@ FUNA_CFEM_GroupBY_Semestre <-
     } else {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
             group_by(semestre) %>%
             summarise(sum(valor.Real)),
           key = semestre,
@@ -269,24 +269,24 @@ FUNA_CFEM_GroupBY_Semestre <-
 
 # FUNA_CFEM_Trimestre
 FUNA_CFEM_GroupBY_Trimestre <-
-  function(substancia = ".",
-           cpfcnpj = ".",
-           municipio = ".",
-           uf = ".",
-           anos = ".",
+  function(Substância = ".",
+           CPF_CNPJ = ".",
+           Município = ".",
+           UF = ".",
+           Ano = ".",
            nominal = TRUE) {
     if (nominal == TRUE) {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
             group_by(trimestre) %>%
-            summarise(sum(valor.Recolhido.CFEM)),
+            summarise(sum(ValorRecolhido)),
           key = trimestre,
-          value = `sum(valor.Recolhido.CFEM)`
+          value = `sum(ValorRecolhido)`
         )
       
       return(x)
@@ -294,11 +294,11 @@ FUNA_CFEM_GroupBY_Trimestre <-
     } else {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
             group_by(trimestre) %>%
             summarise(sum(valor.Real)),
           key = trimestre,
@@ -310,26 +310,26 @@ FUNA_CFEM_GroupBY_Trimestre <-
 
 
 
-# FUNA_CFEM_M�s
+# FUNA_CFEM_M?s
 FUNA_CFEM_GroupBY_Mes <-
-  function(substancia = ".",
-           cpfcnpj = ".",
-           municipio = ".",
-           uf = ".",
-           anos = ".",
+  function(Substância = ".",
+           CPF_CNPJ = ".",
+           Município = ".",
+           UF = ".",
+           Ano = ".",
            nominal = TRUE) {
     if (nominal == TRUE) {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(mes.de.referencia) %>%
-            summarise(sum(valor.Recolhido.CFEM)),
-          key = mes.de.referencia,
-          value = `sum(valor.Recolhido.CFEM)`
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(Período) %>%
+            summarise(sum(ValorRecolhido)),
+          key = Período,
+          value = `sum(ValorRecolhido)`
         )
       
       return(x)
@@ -337,14 +337,14 @@ FUNA_CFEM_GroupBY_Mes <-
     } else {
       x <-
         spread(
-          select(cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = substancia) == TRUE &
-                           grepl(cfem_BR$cpfcnpj, pattern = cpfcnpj) == TRUE &
-                           grepl(cfem_BR$municipio, pattern = municipio) == TRUE &
-                           grepl(cfem_BR$uf, pattern = uf) == TRUE &
-                           grepl(cfem_BR$periodo, pattern = anos) == TRUE, ], everything()) %>%
-            group_by(mes.de.referencia) %>%
+          select(CFEM_Arrecadacao[grepl(CFEM_Arrecadacao$Substância, pattern = Substância) == TRUE &
+                           grepl(CFEM_Arrecadacao$CPF_CNPJ, pattern = CPF_CNPJ) == TRUE &
+                           grepl(CFEM_Arrecadacao$Município, pattern = Município) == TRUE &
+                           grepl(CFEM_Arrecadacao$UF, pattern = UF) == TRUE &
+                           grepl(CFEM_Arrecadacao$Ano, pattern = Ano) == TRUE, ], everything()) %>%
+            group_by(Período) %>%
             summarise(sum(valor.Real)),
-          key = mes.de.referencia,
+          key = Período,
           value = `sum(valor.Real)`
         )
       return(x)
