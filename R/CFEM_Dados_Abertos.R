@@ -1,162 +1,165 @@
 #       rm(list = ls())
 
-if (!require(svDialogs)) { 
-  install.packages('svDialogs') 
-  library(svDialogs) 
-}
+# if (!require(svDialogs)) { 
+#   install.packages('svDialogs') 
+#   library(svDialogs) 
+# }
 options(editor = 'notepad')
 library(tidyverse)
 library(lubridate)
 library(svDialogs)
-
- source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/Funcoes_de_Formatacao_Estilo.r')
- source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/graficos_AMB.r')
- source('D:/Users/humberto.serna/Documents/D_Lake/Dados_Abertos_ANM/Funcoes_CFEM.R')
- source('D:/Users/humberto.serna/Documents/D_Lake/geocod.R')
-
+source('./R/geocod.R')
 
 
 # Carregamento ----
-cfem_BR <- #fonte: Dados Abertos
+CFEM_Arrecadacao <- #fonte: Dados Abertos
   read.table(
-    file = "./D_Lake/Dados_Abertos_ANM/ARRECADACAO/CFEM_Arrecadacao.csv",
+    file = "./data/CFEM_Arrecadacao.csv",
     # file = "https://app.anm.gov.br/DadosAbertos/ARRECADACAO/CFEM_Arrecadacao.csv",
-    header = TRUE,
-    sep = ";",
-    stringsAsFactors = FALSE,
-    dec = ',',
-    quote = "\"",
+    sep = ";", dec = ',', quote = "\"",
+    fileEncoding = "Latin1", 
+    skip = 1418021,
     colClasses = c(
       "character",         #  Ano        
-      "character",         #  Mês        
+      "character",         #  MÃªs        
       "character",       #  Processo        
       "character",       #  AnoDoProcesso        
       "character",       #  Tipo_PF_PJ        
       "character",       #  CPF_CNPJ        
-      "character",       #  Substância        
+      "character",       #  SubstÃ¢ncia        
       "character",       #  UF        
-      "character",       #  Município        
+      "character",       #  MunicÃ­pio        
       "character",          #  QuantidadeComercializada        
       "character",       #  UnidadeDeMedida        
       "character"           #  ValorRecolhido
     ))
 
 
-dlgMessage(rstudio = FALSE,
-  c('    RECOLHIMENTOS DA CFEM', " ","    Escolha os anos a seguir")
-)
-ANOS <-
-  dlgList(rstudio = FALSE,
-          choices = c("2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", 
-      "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", 
-      "2018", "2019", "2020", "2021"),
-    multiple = TRUE,
-    title = c("CTRL+mouse p/ diversos")
-  )$res
+colnames(CFEM_Arrecadacao) <- 
+  c("Ano", "MÃªs", "Processo", "AnoDoProcesso", "Tipo_PF_PJ", "CPF_CNPJ", 
+    "SubstÃ¢ncia", "UF", "MunicÃ­pio", "QuantidadeComercializada", 
+    "UnidadeDeMedida", "ValorRecolhido")
 
-cfem_BR <- 
-  cfem_BR[cfem_BR$Ano %in% ANOS,]
+
+
+# dlgMessage(rstudio = FALSE,
+#   c('    RECOLHIMENTOS DA CFEM', " ","    Escolha os anos a seguir")
+# )
+# ANOS <-
+#   dlgList(rstudio = FALSE,
+#           choices = c("2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", 
+#       "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", 
+#       "2018", "2019", "2020", "2021"),
+#     multiple = TRUE,
+#     title = c("CTRL+mouse p/ diversos")
+#   )$res
+
+# CFEM_Arrecadacao <- 
+#   CFEM_Arrecadacao[CFEM_Arrecadacao$Ano %in% ANOS,]
 
 # _____________________________________________________________________________________________________________________________
 
 
 # Ajuste de Classe
 
-cfem_BR$Ano <- 
-  as.integer(cfem_BR$Ano)
+CFEM_Arrecadacao$Ano <- 
+  as.integer(CFEM_Arrecadacao$Ano) |> parse_date_time(orders = "%Y") |> year()
 
-cfem_BR$Mês <- 
-  as.integer(cfem_BR$Mês)
+CFEM_Arrecadacao$MÃªs <- 
+  as.integer(CFEM_Arrecadacao$MÃªs) 
 
-cfem_BR$QuantidadeComercializada <- 
+CFEM_Arrecadacao$QuantidadeComercializada <- 
   as.numeric(gsub(
-    str_squish(cfem_BR$QuantidadeComercializada), 
+    str_squish(CFEM_Arrecadacao$QuantidadeComercializada), 
     pattern = ",", replacement = "."))
 
-cfem_BR$ValorRecolhido <- 
+CFEM_Arrecadacao$ValorRecolhido <- 
   as.numeric(gsub(
-    str_squish(cfem_BR$ValorRecolhido), 
+    str_squish(CFEM_Arrecadacao$ValorRecolhido), 
     pattern = ",", replacement = "."))
 
 # Ajuste de Processo
 
 # 
-# df <- cfem_BR[,c(3,4)]
+# df <- CFEM_Arrecadacao[,c(3,4)]
 # colnames(df) <- c("processo","ano")
 # 
 # FUNA_processo_sigmine_SCM(df = df)
 
-cfem_BR$Processo <- 
-  paste(cfem_BR$Processo, cfem_BR$AnoDoProcesso, sep = "/")
+CFEM_Arrecadacao$Processo <- 
+  paste(CFEM_Arrecadacao$Processo, CFEM_Arrecadacao$AnoDoProcesso, sep = "/")
 
 
 
 # id Municipio_UF
-cfem_BR$Municipio_UF <- 
+CFEM_Arrecadacao$Municipio_UF <- 
   paste(
-    str_squish(cfem_BR$Município),
-    cfem_BR$UF, sep = "/")
+    str_squish(CFEM_Arrecadacao$MunicÃ­pio),
+    CFEM_Arrecadacao$UF, sep = "/")
 
 # grandezas
-cfem_BR$QuantidadeComercializada <- 
-  as.numeric(gsub(str_squish(cfem_BR$QuantidadeComercializada), pattern = ",", replacement = "."))
+CFEM_Arrecadacao$QuantidadeComercializada <- 
+  as.numeric(gsub(str_squish(CFEM_Arrecadacao$QuantidadeComercializada), pattern = ",", replacement = "."))
 
-cfem_BR$ValorRecolhido <- 
-  as.numeric(gsub(str_squish(cfem_BR$ValorRecolhido), pattern = ",", replacement = "."))
+CFEM_Arrecadacao$ValorRecolhido <- 
+  as.numeric(gsub(str_squish(CFEM_Arrecadacao$ValorRecolhido), pattern = ",", replacement = "."))
 
 
-# Formatação e ajustes
-cfem_BR$Município <- 
-  cfem_BR$Município %>% str_squish()
+# Formata??o e ajustes
+CFEM_Arrecadacao$MunicÃ­pio <- 
+  CFEM_Arrecadacao$MunicÃ­pio |> str_squish()
 
-cfem_BR$mun_chave_primaria <- 
-  cfem_BR$Municipio_UF %>% FUNA_removeAcentos() %>% FUNA_minusculas()
+CFEM_Arrecadacao$mun_chave_primaria <- 
+  CFEM_Arrecadacao$Municipio_UF |> iconv(to = "ASCII//TRANSLIT") |> tolower()
 
 geocod$mun_chave_primaria <- 
-  paste(geocod$Município, geocod$UF_sigla, sep = "/") %>% 
-  str_squish() %>% FUNA_removeAcentos() %>% FUNA_minusculas()
+  paste(geocod$MunicÃ­pio, geocod$UF_sigla, sep = "/") |> 
+  str_squish() |> iconv(to = "ASCII//TRANSLIT") |> tolower()
 
 
-# cfem_BR <- 
-#   left_join(cfem_BR, geocod[,c(12,8)], by = c("mun_chave_primaria"))
+# CFEM_Arrecadacao <- 
+#   left_join(CFEM_Arrecadacao, geocod[,c(12,8)], by = c("mun_chave_primaria"))
 
 
 
-cfem_BR$UF <- 
-  str_squish(cfem_BR$UF)
+CFEM_Arrecadacao$UF <- 
+  str_squish(CFEM_Arrecadacao$UF)
 
-cfem_BR$UnidadeDeMedida <- 
-  str_squish(cfem_BR$UnidadeDeMedida)
+CFEM_Arrecadacao$UnidadeDeMedida <- 
+  str_squish(CFEM_Arrecadacao$UnidadeDeMedida)
 
-cfem_BR$Substância <- 
-  cfem_BR$Substância %>% str_squish() 
+CFEM_Arrecadacao$SubstÃ¢ncia <- 
+  CFEM_Arrecadacao$SubstÃ¢ncia |> str_squish() 
 
-# cfem_BR$substancia.AMB <- 
-#   cfem_BR$substancia.SCM
+# CFEM_Arrecadacao$substancia.AMB <- 
+#   CFEM_Arrecadacao$substancia.SCM
 # 
-# cfem_BR$substancia.AMB <- 
-#   cfem_BR$substancia.AMB %>% FUNA_minusculas()
+# CFEM_Arrecadacao$substancia.AMB <- 
+#   CFEM_Arrecadacao$substancia.AMB |> FUNA_minusculas()
 
 
-# ____ impondo mês.ANO
-cfem_BR$Período <-
-  as_date(
-    paste(cfem_BR$Ano, month(as.integer(cfem_BR$Mês), label = TRUE),"1",   sep = "-")
-    ) 
+# ____ impondo mÃªs.ANO
+CFEM_Arrecadacao$PerÃ­odo <-
+  as_date(paste(
+    CFEM_Arrecadacao$Ano,
+    month(as.integer(CFEM_Arrecadacao$MÃªs), label = TRUE),
+    "1",
+    sep = "-"
+  )) 
 
 # ____ impondo trimestre
 
-cfem_BR$trimestre <-
+CFEM_Arrecadacao$trimestre <-
   lubridate::quarter(
     lubridate::ymd(
-      cfem_BR$Período), with_year = TRUE)
+      CFEM_Arrecadacao$PerÃ­odo), with_year = TRUE)
 
 
 # ____ impondo semestre
-cfem_BR$semestre <-
+CFEM_Arrecadacao$semestre <-
   lubridate::semester(
     lubridate::ymd(
-      cfem_BR$Período), with_year = TRUE)
+      CFEM_Arrecadacao$PerÃ­odo), with_year = TRUE)
 
 
- # saveRDS(cfem_BR[,-c(2, 14)],'D:/Users/humberto.serna/Documents/D_Lake/CFEM_Dados_Abertos.RDATA')
+  saveRDS(CFEM_Arrecadacao,'./data/CFEM_Arrecadacao.Rds')

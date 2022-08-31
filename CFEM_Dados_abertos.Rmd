@@ -12,129 +12,61 @@ options(editor = 'notepad')
 library(tidyverse)
 library(lubridate)
 library(deflateBR)
+library(DT)
 library(knitr)
 
-source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/Funcoes_de_Formatacao_Estilo.r')
-source('D:/Users/humberto.serna/Desktop/Anuario_Mineral_Brasileiro/Funcoes_de_Formatacao_Estilo/graficos_AMB.r')
-source('D:/Users/humberto.serna/Documents/D_Lake/Dados_Abertos_ANM/Funcoes_CFEM.R')
+source('./R/Funcoes_CFEM.R')
 
 # Carregamento ----
-load(file = 'D:/Users/humberto.serna/Documents/D_Lake/cfem_BR.RData')
+CFEM_Arrecadacao <-
+  readRDS(file = './Data/CFEM_Arrecadacao.Rds')
 
 # _____unindo o IGP à base CFEM
-IGP_DI <-
-  read.table(
-    file = paste(Sys.getenv("R_USER"), '/D_Lake/IGP_DI.csv', sep = ""),
-    header = TRUE,sep = ";",stringsAsFactors = FALSE, dec = ',')
-IGP_DI$Data <- ymd(IGP_DI$Data)
+# IGP_DI <-
+#   read.table(
+#     file = paste(Sys.getenv("R_USER"), '/D_Lake/IGP_DI.csv', sep = ""),
+#     header = TRUE,sep = ";",stringsAsFactors = FALSE, dec = ',')
+# IGP_DI$Data <- ymd(IGP_DI$Data)
 
 
-cfem_BR <-
-  left_join(cfem_BR, IGP_DI, by = c('mes.de.referencia' = "Data"))
+# CFEM_Arrecadacao <-
+#   left_join(CFEM_Arrecadacao, IGP_DI, by = c('mes.de.referencia' = "Data"))
 
 # vetor de valores reais (DEZ2020)---- 
 
-# cfem_BR$valor.Real <- NA
-# for (i in 1:nrow(cfem_BR)) {
-#   cfem_BR$valor.Real[i] <-
-#     cfem_BR$valor.Recolhido.CFEM[i] * (IGP_DI[IGP_DI$Data == "2020-12-01", "IGP_DI"] /
-#                                          cfem_BR$IGP_DI[i])
+# CFEM_Arrecadacao$valor.Real <- NA
+# for (i in 1:nrow(CFEM_Arrecadacao)) {
+#   CFEM_Arrecadacao$valor.Real[i] <-
+#     CFEM_Arrecadacao$ValorRecolhido[i] * (IGP_DI[IGP_DI$Data == "2020-12-01", "IGP_DI"] /
+#                                          CFEM_Arrecadacao$IGP_DI[i])
 # }
 
 
 # vetor de valores unitários ----
 
 
-cfem_BR$valor_unitario <- 
-  round(
-    cfem_BR$valor.Recolhido.CFEM / cfem_BR$quantidade.Comercializada, digits = 2)
+# CFEM_Arrecadacao$valor_unitario <- 
+#   round(
+#     CFEM_Arrecadacao$ValorRecolhido / CFEM_Arrecadacao$quantidade.Comercializada, digits = 2)
 
 
 ```
 
-### 01SEM2019
-```{r cfem, echo=FALSE, message=FALSE, warning=FALSE}
-summary(cfem_BR[cfem_BR$semestre == '2019.1',]$valor.Recolhido.CFEM)
-```
-### 02SEM2019
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-summary(cfem_BR[cfem_BR$semestre == '2019.2',]$valor.Recolhido.CFEM)
-```
-### 01SEM2020
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-summary(cfem_BR[cfem_BR$semestre == '2020.1',]$valor.Recolhido.CFEM)
-```
-### 02SEM2020
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-summary(cfem_BR[cfem_BR$semestre == '2020.2',]$valor.Recolhido.CFEM)
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+FUNA_CFEM_GroupBY_Substancia_Ano()
+FUNA_CFEM_GroupBY_Substancia_Mes()
+FUNA_CFEM_GroupBY_Substancia_Trimestre()
 ```
 
-## ANOS
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-FUNA_CFEM_GroupBY_Ano(anos = '2016|2017|2018|2019|2020') %>% FUNA_BARPLOT()
-```
-
-## semestres
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-FUNA_CFEM_GroupBY_Semestre(anos = '2016|2017|2018|2019|2020') %>% FUNA_BARPLOT()
-```
-
-## Meses nominais
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-FUNA_CFEM_GroupBY_Mes(anos = '2016|2017|2018|2019|2020') %>% FUNA_BARPLOT()
-```
-
-
-
-## 2018 meses
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-FUNA_CFEM_GroupBY_Mes(anos = '2018') %>% FUNA_BARPLOT()
-```
-
-
-## 2019 meses
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-FUNA_CFEM_GroupBY_Mes(anos = '2019') %>% FUNA_BARPLOT()
-```
-
-
-## 2020 meses
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-FUNA_CFEM_GroupBY_Mes(anos = '2020') %>% FUNA_BARPLOT()
-```
-
-
-## 2020 meses em valores REAIS
-```{r Meses em valores reais, echo=FALSE, message=FALSE, warning=FALSE}
-
-FUNA_CFEM_GroupBY_Mes(anos = '2016|2017|2018|2019|2020', nominal = FALSE) %>% FUNA_BARPLOT()
-
-```
-
-
-## Maiores Empresas em cada Substância - ANO 
-```{r Maiores Empresas em cada Substância - ANO, echo=FALSE}
-
-
-df <-
-  group_by(cfem_BR[cfem_BR$periodo %in% c(2018, 2019, 2020),],
-           cpfcnpj, substancia.SCM, periodo) %>% summarise(
-             "Q_Comercializada" = sum(quantidade.Comercializada),
-             "CFEM" = sum(valor.Recolhido.CFEM))
-
-```
-
-
+```{r echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
 ## Extração do top 6 em cada substância 
-```{r  Extração do top 6 em cada substância , echo=FALSE}
-
 lista <- list()
 i <- 1
 for (ano in 2018:2020) {
-  for (substancia in sort(unique(cfem_BR$substancia.SCM))) {
+  for (substancia in sort(unique(CFEM_Arrecadacao$Substância))) {
     lista[[i]] <-
       head(arrange(df[df$periodo == ano &
-                           df$substancia.SCM == substancia,], desc(CFEM)))
+                           df$Substância == substancia,], desc(CFEM)))
     i <- i + 1
   }
 }
@@ -146,62 +78,23 @@ kable(df_1d)
 
 ```
 
+```{r include=FALSE}
 
+CNPJ_lista <- c("00.788.904/0001-23","01.525.510/0001-45","01.922.576/0001-79","02.515.177/0001-56","02.885.459/0001-45","02.979.793/0001-68","03.556.866/0001-71","03.903.844/0001-30","03.991.408/0001-60","04.372.115/0001-68","04.560.304/0001-64","04.677.029/0001-63","04.792.931/0001-20","04.996.660/0001-25","05.023.221/0001-07","05.374.007/0001-97","05.463.608/0001-76","05.771.023/0001-13","05.972.820/0001-69","06.011.849/0001-47","06.046.407/0001-36","06.887.267/0001-29","07.038.464/0001-36","07.063.306/0001-36","07.237.960/0001-19","07.362.549/0001-75","07.379.392/0001-90","07.508.656/0001-69","07.715.130/0001-50","07.729.986/0001-84","07.863.691/0001-04","07.898.477/0001-85","08.020.967/0001-47","08.350.981/0001-09","08.530.647/0001-37","08.637.485/0001-30","08.933.799/0001-80","08.981.444/0001-67","09.019.612/0001-09","09.128.580/0001-71","09.164.776/0001-11","09.225.842/0001-16","09.259.736/0001-53","09.410.780/0001-12","09.521.470/0001-75","09.539.319/0001-64","09.540.660/0001-30","09.838.004/0001-18","10.221.315/0001-12","10.745.049/0001-27","11.130.381/0001-40","11.183.394/0001-87","11.219.803/0001-58","11.507.678/0001-81","11.620.394/0001-05","11.664.330/0001-06","13.215.054/0001-16","13.332.669/0001-22","13.579.583/0001-07","13.624.488/0001-70","15.421.210/0001-20","16.708.005/0001-03","17.004.696/0001-27","17.055.927/0001-21","17.265.498/0001-17","17.274.198/0001-02","17.601.735/0001-73","17.831.186/0001-23","18.016.851/0001-98","18.336.502/0001-53","19.073.363/0001-85","19.812.830/0001-41","20.830.277/0001-59","21.601.691/0001-59","22.089.507/0001-04","22.159.579/0001-72","22.825.491/0001-42","23.082.365/0001-08","23.102.872/0001-66","23.699.241/0001-76","24.097.827/0001-23","24.279.970/0001-36","24.486.800/0001-22","24.907.257/0001-90","24.977.864/0001-26","25.252.467/0001-50","25.478.264/0001-86","25.484.833/0001-04","26.021.163/0001-44","26.087.643/0001-08","27.327.445/0001-37","27.339.736/0001-45","27.948.423/0001-94","30.364.216/0001-05","31.289.964/0001-25","31.810.475/0001-77","33.661.182/0001-09","34.060.871/0001-12","34.691.600/0001-65","34.726.547/0001-90","70.428.735/0001-04","71.365.332/0001-18","71.417.679/0001-67","78.340.270/0001-39","80.967.540/0001-88","84.479.088/0001-66","85.937.316/0001-67","93.317.915/0001-06","93.515.666/0001-63","93.944.510/0001-06")
 
-# _____ df_wide_maiores_empresas_ano ----
-```{r maiores_empresas_ano_wide, echo=FALSE}
+CNPJ_integer <- 
+  CNPJ_lista |> gsub(pattern = "\\.|/|-", replacement ="")
 
-df_wide_maiores_empresas_ano <-
-  arrange(spread(
-    left_join(
-      df_1d[, -4], # -Q_Comercializada
-      #cpfcnpj,
-      unique(cfem_BR[, c("cpfcnpj", "titular")]), 
-      by = "cpfcnpj"),  
-    key = periodo,
-    value = CFEM
-  ), desc(`2020`))[, c(1, 3, 2, 6:4)]
+cnpj <- data.frame("CPF_CNPJ" = CNPJ_integer, "CNPJ" = CNPJ_lista)
 
-kable(df_wide_maiores_empresas_ano)
+CFEM_Cooperativas <- 
+  left_join(cnpj, CFEM_Arrecadacao, by = "CPF_CNPJ")
 
+CFEM_Alvos <- 
+  summarise(
+    group_by(CFEM_Arrecadacao[CFEM_Arrecadacao$Ano %in% c(2020,2021),], 
+             CPF_CNPJ, Ano, Processo, Municipio_UF, Substância),
+    "CFEM" = sum(ValorRecolhido)) 
 ```
-
-
-
-```{r}
-
-ornamentais <- c("CALCARIO", "QUARTZITO", "DOLOMITO", "GRANITO", "ARENITO", "GRANITO ORNAMENTAL", 
-"GNAISSE", "BASALTO", "ARDOSIA", "CALCARIO CALCITICO", "DIABASIO", "BASALTO P/ REVESTIMENTO", 
-"GRANODIORITO", "GRANITO P/ REVESTIMENTO", "QUARTZITO SERICITICO", 
-"GRANITO GNAISSICO", "MARMORE P/ REVESTIMENTO","GRANADA", "GNAISSE ORNAMENTAL")
-
-summarise(
-  group_by(
-    cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = "ORNAMENT") & 
-              cfem_BR$periodo == 2020,], substancia.SCM),
-  mean(valor_unitario, trim = 0.05))
-
-
-
-
-cfem_BR[grepl(cfem_BR$substancia.SCM, pattern = "ORNAMENT") & 
-              cfem_BR$periodo == 2020,]$valor_unitario %>% boxplot()
-
-
-
-
-summarise(
-  group_by(
-    cfem_BR[cfem_BR$unidade.de.Medida %in% c("m3-> t", "m3", "m2") &
-              cfem_BR$periodo == 2020 &
-      cfem_BR$substancia.SCM %in% ornamentais,],
-    substancia.AMB
-  ),
-  mean(valor_unitario, na.rm = T)
-)
-
-
-```
-
 
 
