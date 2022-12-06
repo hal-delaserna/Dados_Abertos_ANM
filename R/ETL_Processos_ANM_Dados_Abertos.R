@@ -54,12 +54,12 @@
     
     processos_ANM[[i]] <-
       read.table(
-        file = paste(sep = "/", prevdir, arquivos[[i]]),
+        file = paste0("./data/", arquivos[[i]]),
         header = TRUE,
         sep = ",",
         fill = TRUE,
         stringsAsFactors = FALSE,
-        encoding = "ANSI", 
+        fileEncoding = "Latin1", 
         quote = "\""
       )
   }

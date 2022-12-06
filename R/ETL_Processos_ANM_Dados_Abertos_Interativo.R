@@ -50,7 +50,7 @@ if (res == "yes") {
         sep = ",",
         fill = TRUE,
         stringsAsFactors = FALSE,
-        encoding = "ANSI", 
+        fileEncoding = "Latin1", 
         quote = "\""
       )
   }
@@ -66,8 +66,6 @@ if (res == "yes") {
   
   if (res == "yes") {
     
-  prevdir <-
-    dlgDir(default = getwd(), title = 'INFORME A PASTA DOS ARQUIVOS BAIXADOS.')$res
   
   arquivos <-
     dlgList(preselect = c('Licenciamento.csv','PLG.csv','Portaria_de_Lavra.csv','Registro_de_Extracao_Publicado.csv','Requerimento_de_Lavra.csv','Requerimento_de_Licenciamento.csv','Requerimento_de_Pesquisa.csv','Requerimento_de_PLG.csv','Requerimento_de_Registro_de_Extracao_Protocolizado.csv'),
@@ -91,12 +89,12 @@ if (res == "yes") {
     
     processos_ANM[[i]] <-
       read.table(
-        file = paste(sep = "/", prevdir, arquivos[[i]]),
+        file = paste0("./data/", arquivos[[i]]),
         header = TRUE,
         sep = ",",
         fill = TRUE,
         stringsAsFactors = FALSE,
-        encoding = "ANSI", 
+        fileEncoding = "Latin1", 
         quote = "\""
       )
   }

@@ -1,0 +1,226 @@
+---
+title: "Untitled"
+author: "Humberto Delaserna"
+date: "4 de outubro de 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+lice <- read.csv('./Licenciamentos.csv',
+         sep = ";", dec = ",", stringsAsFactors = FALSE, encoding = "ANSI")
+colnames(lice) <- c("processo", "ano_processo", "ano_licenciamento", "requerimento", "titular", "substancia", "area", "municipios", "uf")
+
+lice$tempo_de_tramite <- lice$ano_licenciamento - lice$ano_processo
+
+
+```
+
+Anos entre o requerimento e a publicação do Licenciamnto
+
+```{r echo = FALSE}
+media_2017 <- select(lice, everything()) %>% 
+               filter(ano_licenciamento == "2017") %>% 
+                 summarise('média dos licenciamentos publicados em 2017'= mean(2017-ano_processo))
+```
+
+
+
+```{r echo = FALSE}
+media_2016 <- select(lice, everything()) %>% 
+               filter(ano_licenciamento == "2016") %>% 
+                 summarise('média dos licenciamentos publicados em 2016' = mean(2016-ano_processo))
+```
+
+
+```{r echo = FALSE}
+media_2015 <- select(lice, everything()) %>% 
+               filter(ano_licenciamento == "2015") %>% 
+                 summarise('média dos licenciamentos publicados em 2015' = mean(2015-ano_processo))
+```
+
+
+```{r echo = FALSE}
+media_2014 <- select(lice, everything()) %>% 
+               filter(ano_licenciamento == "2014") %>% 
+                 summarise('média dos licenciamentos publicados em 2014' = mean(2014-ano_processo))
+```
+
+
+```{r echo = FALSE}
+media_2013 <- select(lice, everything()) %>% 
+               filter(ano_licenciamento == "2013") %>% 
+                 summarise('média dos licenciamentos publicados em 2013' = mean(2013-ano_processo))
+```
+
+
+```{r echo = FALSE}
+media_2012 <- select(lice, everything()) %>% 
+               filter(ano_licenciamento == "2012") %>% 
+                 summarise('média dos licenciamentos publicados em 2012' = mean(2012-ano_processo))
+```
+
+
+```{r echo = FALSE}
+media_2011 <- select(lice, everything()) %>% 
+               filter(ano_licenciamento == "2011") %>% 
+                 summarise('média dos licenciamentos publicados em 2011' = mean(2011-ano_processo))
+```
+
+
+```{r echo=FALSE}
+lice[lice$ano_licenciamento=='2017',]$tempo_de_tramite %>% hist(main = 'histograma dos licenciamentos publicados em 2017')
+```
+
+
+```{r echo=FALSE}
+lice[lice$ano_licenciamento=='2016',]$tempo_de_tramite %>% hist(main = 'histograma dos licenciamentos publicados em 2016')
+```
+
+
+```{r echo=FALSE}
+lice[lice$ano_licenciamento=='2015',]$tempo_de_tramite %>% hist(main = 'histograma dos licenciamentos publicados em 2015')
+```
+
+
+```{r echo=FALSE}
+lice[lice$ano_licenciamento=='2014',]$tempo_de_tramite %>% hist(main = 'histograma dos licenciamentos publicados em 2014')
+```
+
+
+```{r echo=FALSE}
+lice[lice$ano_licenciamento=='2013',]$tempo_de_tramite %>% hist(main = 'histograma dos licenciamentos publicados em 2013')
+```
+
+
+```{r echo=FALSE}
+lice[lice$ano_licenciamento=='2012',]$tempo_de_tramite %>% hist(main = 'histograma dos licenciamentos publicados em 2012')
+```
+
+
+```{r echo=FALSE}
+lice[lice$ano_licenciamento=='2011',]$tempo_de_tramite %>% hist(main = 'histograma dos licenciamentos publicados em 2011')
+```
+
+
+
+
+
+```{r}
+
+tabela <- c(media_2011, media_2012, media_2013, media_2014, 
+media_2015, media_2016, media_2017) %>% data.frame() 
+
+```
+
+`r tabela`
+
+Licenciamentos do Ano de 2017 por UF
+```{r echo=FALSE }
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2017") %>% select(uf)) %>% sort(decreasing = TRUE)
+```
+
+
+```{r echo=FALSE}
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2017") %>% select(uf)) %>% sort(decreasing = TRUE) %>% 
+        barplot()
+```
+
+
+
+Licenciamentos publicados em 2016 por UF
+```{r echo=FALSE}
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2016") %>% select(uf)) %>% sort(decreasing = TRUE)
+```
+
+```{r echo = FALSE}
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2016") %>% select(uf)) %>% sort(decreasing = TRUE) %>% 
+        barplot()
+```
+
+Licenciamentos do Ano de 2015 por UF
+```{r echo=FALSE }
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2015") %>% select(uf)) %>% sort(decreasing = TRUE)
+```
+
+
+```{r echo=FALSE}
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2015") %>% select(uf)) %>% sort(decreasing = TRUE) %>% 
+        barplot()
+```
+
+
+Licenciamentos do Ano de 2014 por UF
+```{r echo=FALSE }
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2014") %>% select(uf)) %>% sort(decreasing = TRUE)
+```
+
+
+```{r echo=FALSE}
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2014") %>% select(uf)) %>% sort(decreasing = TRUE) %>% 
+        barplot()
+```
+
+
+Licenciamentos do Ano de 2013 por UF
+```{r echo=FALSE }
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2013") %>% select(uf)) %>% sort(decreasing = TRUE)
+```
+
+
+```{r echo=FALSE}
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2013") %>% select(uf)) %>% sort(decreasing = TRUE) %>% 
+        barplot()
+```
+
+Licenciamentos do Ano de 2012 por UF
+```{r echo=FALSE }
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2012") %>% select(uf)) %>% sort(decreasing = TRUE)
+```
+
+
+```{r echo=FALSE}
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2011") %>% select(uf)) %>% sort(decreasing = TRUE) %>% 
+        barplot()
+```
+
+Licenciamentos do Ano de 2015 por UF
+```{r echo=FALSE }
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2011") %>% select(uf)) %>% sort(decreasing = TRUE)
+```
+
+
+```{r echo=FALSE}
+
+table(select(lice, everything()) %>% 
+        filter(ano_licenciamento == "2011") %>% select(uf)) %>% sort(decreasing = TRUE) %>% 
+        barplot()
+```
+
