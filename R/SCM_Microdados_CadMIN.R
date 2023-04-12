@@ -2,45 +2,45 @@
 library(tidyverse)
 library(foreign)
 
-# CARREGAMENTO E FORMATAÇÃO ----
+# CARREGAMENTO E FORMATA??O ----
 
-CondicaoPropriedadeSolo <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/CondicaoPropriedadeSolo.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-DocumentoLegal <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/DocumentoLegal.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-Evento <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/Evento.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-FaseProcesso <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/FaseProcesso.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-MotivoEncerramentoSubstancia <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/MotivoEncerramentoSubstancia.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-Municipio <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/Municipio.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-Pessoa <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/Pessoa.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-Processo <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/Processo.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-ProcessoAssociacao <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/ProcessoAssociacao.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-ProcessoDocumentacao <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/ProcessoDocumentacao.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-ProcessoEvento <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/ProcessoEvento.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-ProcessoMunicipio <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/ProcessoMunicipio.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-ProcessoPessoa <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/ProcessoPessoa.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-ProcessoPropriedadeSolo <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/ProcessoPropriedadeSolo.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-ProcessoSubstancia <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/ProcessoSubstancia.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-ProcessoTitulo <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/ProcessoTitulo.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-SituacaoDocumentoLegal <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/SituacaoDocumentoLegal.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-Substancia <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/Substancia.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-TipoAssociacao <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/TipoAssociacao.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-TipoDocumento <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/TipoDocumento.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-TipoDocumentoLegal <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/TipoDocumentoLegal.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-TipoRelacao <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/TipoRelacao.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-TipoRepresentacaoLegal <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/TipoRepresentacaoLegal.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-TipoRequerimento <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/TipoRequerimento.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-TipoResponsabilidadeTecnica <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/TipoResponsabilidadeTecnica.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-TipoUsoSubstancia <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/TipoUsoSubstancia.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-UnidadeAdministrativaRegional <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/UnidadeAdministrativaRegional.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
-UnidadeProtocolizadora <- read.table(file = paste(sep = "",Sys.getenv("R_USER"),'/D_Lake/Dados_Abertos_ANM/microdados-scm/UnidadeProtocolizadora.txt'), header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+CondicaoPropriedadeSolo <- read.table(file = './data/microdados_scm/CondicaoPropriedadeSolo.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+DocumentoLegal <- read.table(file = './data/microdados_scm/DocumentoLegal.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+Evento <- read.table(file = './data/microdados_scm/Evento.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+FaseProcesso <- read.table(file = './data/microdados_scm/FaseProcesso.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+MotivoEncerramentoSubstancia <- read.table(file = './data/microdados_scm/MotivoEncerramentoSubstancia.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+Municipio <- read.table(file = './data/microdados_scm/Municipio.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+Pessoa <- read.table(file = './data/microdados_scm/Pessoa.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+Processo <- read.table(file = './data/microdados_scm/Processo.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+ProcessoAssociacao <- read.table(file = './data/microdados_scm/ProcessoAssociacao.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+ProcessoDocumentacao <- read.table(file = './data/microdados_scm/ProcessoDocumentacao.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+ProcessoEvento <- read.table(file = './data/microdados_scm/ProcessoEvento.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+ProcessoMunicipio <- read.table(file = './data/microdados_scm/ProcessoMunicipio.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+ProcessoPessoa <- read.table(file = './data/microdados_scm/ProcessoPessoa.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+ProcessoPropriedadeSolo <- read.table(file = './data/microdados_scm/ProcessoPropriedadeSolo.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+ProcessoSubstancia <- read.table(file = './data/microdados_scm/ProcessoSubstancia.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+ProcessoTitulo <- read.table(file = './data/microdados_scm/ProcessoTitulo.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+SituacaoDocumentoLegal <- read.table(file = './data/microdados_scm/SituacaoDocumentoLegal.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+Substancia <- read.table(file = './data/microdados_scm/Substancia.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+TipoAssociacao <- read.table(file = './data/microdados_scm/TipoAssociacao.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+TipoDocumento <- read.table(file = './data/microdados_scm/TipoDocumento.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+TipoDocumentoLegal <- read.table(file = './data/microdados_scm/TipoDocumentoLegal.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+TipoRelacao <- read.table(file = './data/microdados_scm/TipoRelacao.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+TipoRepresentacaoLegal <- read.table(file = './data/microdados_scm/TipoRepresentacaoLegal.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+TipoRequerimento <- read.table(file = './data/microdados_scm/TipoRequerimento.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+TipoResponsabilidadeTecnica <- read.table(file = './data/microdados_scm/TipoResponsabilidadeTecnica.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+TipoUsoSubstancia <- read.table(file = './data/microdados_scm/TipoUsoSubstancia.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+UnidadeAdministrativaRegional <- read.table(file = './data/microdados_scm/UnidadeAdministrativaRegional.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
+UnidadeProtocolizadora <- read.table(file = './data/microdados_scm/UnidadeProtocolizadora.txt', header = TRUE, sep = ";", quote = "", fill = TRUE, stringsAsFactors = FALSE)
 
 
 # Delimitando Fases de interesse ----
 DNPM_alvos <-
   lista_dnpm[lista_dnpm$Fase.Atual %in% c(
-    #    "Guia_de_Utilizacao_Autorizada",
-    "Licenciamento"#,
-    #    "PLG",
-    #    "Portaria_de_Lavra",
+        "Guia_de_Utilizacao_Autorizada",
+        "Licenciamento",
+        "PLG",
+        "Portaria_de_Lavra",
     #    "Registro_de_Extracao_Publicado"#,
     #    "Requerimento_de_Lavra",
     #    "Requerimento_de_Licenciamento",
@@ -67,7 +67,7 @@ SP_dbf <-
 SP <- 
   merge(SP_dbf,DNPM_alvos[,-c(1,3)], by.x = "PROCESSO", by.y = "Processo")
 colnames(SP)[12] <- "cpfcnpj"
-# há dois registros duplicados. Execute o anexo.
+# h? dois registros duplicados. Execute o anexo.
 
 
 SP$ativo <- 1

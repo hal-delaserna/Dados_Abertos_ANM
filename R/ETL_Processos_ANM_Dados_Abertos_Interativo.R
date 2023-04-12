@@ -21,41 +21,53 @@ if (res == "yes") {
   arquivos <-
     dlgList(
       c(
-        'Cessoes_de_Direitos.csv',
-        'Guia_de_Utilizacao_Autorizada.csv',
-        'Licenciamento.csv',
-        'PLG.csv',
-        'Portaria_de_Lavra.csv',
-        'Registro_de_Extracao_Publicado.csv',
-        'Requerimento_de_Lavra.csv',
-        'Requerimento_de_Licenciamento.csv',
-        'Requerimento_de_Pesquisa.csv',
-        'Requerimento_de_PLG.csv',
-        'Requerimento_de_Registro_de_Extracao_Protocolizado.csv'
+        "Alvara_de_Pesquisa.csv",
+        "Cessoes_de_Direitos.csv",
+        "Guia_de_Utilizacao_Autorizada.csv",
+        "Licenciamento.csv",
+        "PLG.csv",
+        "Portaria_de_Lavra.csv",
+        "Registro_de_Extracao_Publicado.csv",
+        "Relatorio_de_Pesquisa_Aprovado.csv",
+        "Requerimento_de_Lavra.csv",
+        "Requerimento_de_Licenciamento.csv",
+        "Requerimento_de_Pesquisa.csv",
+        "Requerimento_de_PLG.csv",
+        "Requerimento_de_Registro_de_Extracao_Protocolizado.csv"
       ),
       multiple = TRUE,
       title = 'Selecione os arquivos'
     )$res
-  
-  processos_ANM <- as.list(NA)
-  for (i in 1:length(arquivos)) {
-    processos_ANM[[i]] <-
-      read.table(
-        file = paste(
-          sep = "",
-          "https://app.dnpm.gov.br/DadosAbertos/SCM/",
-          arquivos[[i]]
-        ),
-        header = TRUE,
-        sep = ",",
-        fill = TRUE,
-        stringsAsFactors = FALSE,
-        fileEncoding = "Latin1", 
-        quote = "\""
-      )
-  }
-  processos_ANM <-
-    do.call("rbind", processos_ANM)
+# ciclo de download  
+  url <- "https://app.anm.gov.br/DadosAbertos/SCM/"
+    for (i in arquivos) {
+      download.file(url = paste0(url, i), 
+                    destfile = paste0("./data/",i))
+    }
+    
+# problema de "aspas" dentro da string
+    file <- "EOF_gravando_colonQuotes.sh"
+    sub_dir <- "data"
+    shell.exec(file.path(sub_dir, file, fsep = "\\"))
+
+# ciclo de carregamento    
+    processos_ANM <- as.list(NA)
+    for (i in 1:length(arquivos)) {
+      
+      processos_ANM[[i]] <-
+        read.table(
+          file = paste0("./data/", arquivos[[i]]),
+          header = TRUE,
+          sep = ",",
+          fill = TRUE,
+          stringsAsFactors = FALSE,
+          fileEncoding = "Latin1", 
+          quote = "\""
+        )
+    }
+    
+    processos_ANM <-
+      do.call("rbind", processos_ANM)
   
 } else {
   
@@ -70,15 +82,19 @@ if (res == "yes") {
   arquivos <-
     dlgList(preselect = c('Licenciamento.csv','PLG.csv','Portaria_de_Lavra.csv','Registro_de_Extracao_Publicado.csv','Requerimento_de_Lavra.csv','Requerimento_de_Licenciamento.csv','Requerimento_de_Pesquisa.csv','Requerimento_de_PLG.csv','Requerimento_de_Registro_de_Extracao_Protocolizado.csv'),
       c(
-        'Licenciamento.csv',
-        'PLG.csv',
-        'Portaria_de_Lavra.csv',
-        'Registro_de_Extracao_Publicado.csv',
-        'Requerimento_de_Lavra.csv',
-        'Requerimento_de_Licenciamento.csv',
-        'Requerimento_de_Pesquisa.csv',
-        'Requerimento_de_PLG.csv',
-        'Requerimento_de_Registro_de_Extracao_Protocolizado.csv'
+        "Alvara_de_Pesquisa.csv",
+        "Cessoes_de_Direitos.csv",
+        "Guia_de_Utilizacao_Autorizada.csv",
+        "Licenciamento.csv",
+        "PLG.csv",
+        "Portaria_de_Lavra.csv",
+        "Registro_de_Extracao_Publicado.csv",
+        "Relatorio_de_Pesquisa_Aprovado.csv",
+        "Requerimento_de_Lavra.csv",
+        "Requerimento_de_Licenciamento.csv",
+        "Requerimento_de_Pesquisa.csv",
+        "Requerimento_de_PLG.csv",
+        "Requerimento_de_Registro_de_Extracao_Protocolizado.csv"
       ),
       multiple = TRUE,
       title = 'CTRL + mouse para selecionar diversos'
@@ -104,5 +120,5 @@ if (res == "yes") {
 }} 
 
 
-# saveRDS(processos_ANM, 'D:/Users/humberto.serna/Documents/D_Lake/Processos_ANM_Dados_Abertos.RDATA')
+# saveRDS(processos_ANM, paste0('./data/ETL_Processos_ANM_Dados_Abertos_', format(Sys.time(), format = "%Y%m%d%H"),'.Rds'))
 
