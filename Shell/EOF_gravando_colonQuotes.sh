@@ -1,0 +1,15 @@
+#!/bin/bash
+
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Alvara_de_Pesquisa.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Cessoes_de_Direitos.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Guia_de_Utilizacao_Autorizada.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Licenciamento.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/PLG.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Portaria_de_Lavra.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Registro_de_Extracao_Publicado.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Relatorio_de_Pesquisa_Aprovado.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Requerimento_de_Lavra.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Requerimento_de_Licenciamento.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Requerimento_de_Pesquisa.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Requerimento_de_PLG.csv'     
+sed -i  's/","/@/g  ;   s/^"/#/g  ;   s/"\r/#\r/g  ;  s/"/'\''/g   ;  s/@/","/g  ;   s/^#/"/g   ;   s/#\r/"\r/g '     './data/Requerimento_de_Registro_de_Extracao_Protocolizado.csv'
